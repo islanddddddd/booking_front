@@ -7,7 +7,7 @@
 		<hr />
 		<ul class="nav nav-pills flex-column mb-auto">
 			<li class="nav-item">
-				<router-link class="nav-link active"  to="/home">Home</router-link>
+				<router-link class="nav-link active"  to="/profile">Profile</router-link>
 			</li>
 			<li class="nav-item">
 				<router-link class="nav-link link-dark"  to="/register">register</router-link>

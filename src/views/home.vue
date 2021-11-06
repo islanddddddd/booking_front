@@ -1,9 +1,9 @@
 <template>
 	<h1>Home</h1>
-	<div class="container">
-		<div class="row justify-content-md-center">
-			<div class="col-3"><Sidebar></Sidebar></div>
-			<div class="col-9"><router-view></router-view></div>
+	<div class="container ">
+		<div class="row">
+			<div class="col-4"><Sidebar></Sidebar></div>
+			<div class="col-8"><router-view></router-view></div>
 		</div>
 	</div>
 </template>
