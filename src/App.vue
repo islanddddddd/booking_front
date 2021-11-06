@@ -1,14 +1,13 @@
 <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-
 </script>
 
 <template>
 	<div>
 		<router-link  to="/">login</router-link>|
 		<router-link  to="/register">register</router-link>|
-		<router-link  to="/home">home</router-link>
+		<router-link  to="/home">home</router-link>|
 	</div>
 	<router-view></router-view>
 </template>
