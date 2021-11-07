@@ -1,9 +1,10 @@
 <template>
-	<h1>Home</h1>
-	<div class="container ">
+	<div class="container-fluid">
 		<div class="row">
-			<div class="col-4"><Sidebar></Sidebar></div>
+			<div class="col-1"></div>
+			<div class="col-2"><Sidebar></Sidebar></div>
 			<div class="col-8"><router-view></router-view></div>
+			<div class="col-1"></div>
 		</div>
 	</div>
 </template>
@@ -19,7 +20,7 @@ export default {
 </script>
 
 <style>
-.container {
-	width: 100%;
+div {
+	padding: 0;
 }
 </style>

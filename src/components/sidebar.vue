@@ -1,38 +1,64 @@
 <template>
 	<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
-		<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-			<svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap" /></svg>
+		<div  class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
 			<span class="fs-4">Home</span>
-		</a>
+		</div>
 		<hr />
-		<ul class="nav nav-pills flex-column mb-auto">
-			<li class="nav-item">
-				<router-link class="nav-link active"  to="/profile">Profile</router-link>
+		<ul class="nav nav-pills flex-column mb-auto" v-if="ifAdmin">
+			<li class="nav-item" v-for="(item, index) in adminLinks" :key="index" @click="changeIt(index)">
+				<router-link class="nav-link link-dark" :class="{ active: currentIndex == index }" :to="{ name: item }">{{ index }}</router-link>
 			</li>
-			<li class="nav-item">
-				<router-link class="nav-link link-dark"  to="/register">register</router-link>
-			</li>
-			<li class="nav-item">
-				<router-link class="nav-link link-dark"  to="/login">login</router-link>
-			</li>
-			
 		</ul>
+		<ul class="nav nav-pills flex-column mb-auto" v-else>
+			<li class="nav-item" v-for="(item, index) in userLinks" :key="index" @click="changeIt(index)">
+				<router-link class="nav-link link-dark" :class="{ active: currentIndex == index }" :to="{ name: item }">{{ index }}</router-link>
+			</li>
+		</ul>
+
 		<hr />
 		<div class="dropdown">
 			<a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
 				<strong>more</strong>
 			</a>
 			<ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-				<li><a class="dropdown-item" href="#">Profile</a></li>
-				<li><hr class="dropdown-divider" /></li>
-				<li><a class="dropdown-item" href="#">Sign out</a></li>
+				<li class="dropdown-item" @click="signOut()">Sign out</li>
 			</ul>
 		</div>
 	</div>
 </template>
 
 <script>
-/* global bootstrap: false */
+export default {
+	data() {
+		return {
+			ifAdmin: false,
+			userLinks:{
+				Home:'profile',
+				Orders:'order',
+				Reserve: 'reserve',
+			},
+			adminLinks: {
+				AdminHome: 'adminHome',
+				UserManagement: 'userManagement',
+				OrderManagement: 'order',
+				PlanManagement: 'planManagement',
+				FacilityManagement: 'facilityManagement',
+				Reserve: 'reserve',
+			},
+			currentIndex: 'AdminHome'
+		};
+	},
+	methods: {
+		changeIt(index) {
+			// alert(index);
+			this.currentIndex = index;
+		},
+		signOut(){
+			alert('signOut')
+		}
+	},
+	components: {}
+};
 </script>
 
 <style>
