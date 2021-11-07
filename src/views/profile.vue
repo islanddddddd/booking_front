@@ -1,8 +1,10 @@
 <template>
 	<div class="p-4 mb-4 rounded bg-light">
-		<div id="profileCard" class="" >
-			<p class="my-3 lead" style="text-align: left;" v-for="(item, index) in userInfo">{{ index }}:{{ item }}</p>
-			<p class="lead text-primary" style="text-align: left;"><a href="#" class=" fw-bold">More</a></p>
+		<div id="profileCard" class="">
+			<div class="row">
+				<p class=" lead col-6" style="text-align: left;" v-for="(item, index) in userInfo">{{ index }}:{{ item }}</p>
+
+			</div>
 		</div>
 	</div>
 	<!--  -->
@@ -25,8 +27,6 @@
 			</div>
 		</div>
 	</div>
-
-	<!--  -->
 </template>
 
 <script>
@@ -34,9 +34,16 @@ export default {
 	data() {
 		return {
 			userInfo: {
-				userName: '大烧饼',
-				gender: '男'
+				userId: '1',
+				userName: 'shybee',
+				firstName: 'shy',
+				lastName: 'bee',
+				gender: 'male',
+				tel: '13623711690',
+				address: '随便填写的一个地址',
+				email: '13623711690@qq.com'
 			},
+
 			plan: {
 				type: '月卡',
 				time: '2021-12-12'

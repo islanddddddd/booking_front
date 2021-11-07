@@ -1,31 +1,16 @@
 <template>
-	<h1>user management</h1>
-	<table class="table table-striped table-hover caption-top align-middle">
-		<caption>List of users</caption>
-		<thead class="table-light">
+	<h1>User Management</h1>
+	<table class="table table-striped table-hover caption-top align-middle text-center">
+		<caption>List of Users</caption>
+		<thead class="table-light text-capitalize">
 			<tr>
-				<th scope="col">userId</th>
-				<th scope="col">userName</th>
-				<th scope="col">firstName</th>
-				<th scope="col">lastName</th>
-				<th scope="col">gender</th>
-				<th scope="col">tel</th>
-				<th scope="col">address</th>
-				<th scope="col">email</th>
-				<th scope="col">delete</th>
-				<th scope="col">modify</th>
+				<th scope="col" v-for="(item,index) in dataTitle">{{item}}</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="(item, index) in users">
+			<tr v-for="(item, index) in data">
 				<th>{{ index }}</th>
-				<td>{{ item.userName }}</td>
-				<td>{{ item.firstName }}</td>
-				<td>{{ item.lastName }}</td>
-				<td>{{ item.gender }}</td>
-				<td>{{ item.tel }}</td>
-				<td>{{ item.address }}</td>
-				<td>{{ item.email }}</td>
+				<td v-for="(item, index) in item">{{ item }}</td>
 				<td><button type="button" class="btn btn-danger" @click="deleteUser(index)">delete</button></td>
 				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>
 			</tr>
@@ -37,7 +22,8 @@
 export default {
 	data() {
 		return {
-			users: {
+			dataTitle:['userId','userName','firstName','lastName','gender','tel','address','email','delete','modify'],
+			data: {
 				'1': {
 					userName: 'shybee',
 					firstName: 'shy',
@@ -74,7 +60,7 @@ export default {
 		},
 		modifyUser(userid) {
 			alert(userid);
-		},
+		}
 	},
 	components: {}
 };
