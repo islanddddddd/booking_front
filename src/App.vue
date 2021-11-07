@@ -5,7 +5,7 @@ import Header from './components/header.vue'
 </script>
 
 <template>
-	<div>
+<!-- 	<div>
 		<router-link to="/login">login</router-link>
 		|
 		<router-link to="/register">register</router-link>
@@ -22,7 +22,7 @@ import Header from './components/header.vue'
 		|
 		<router-link to="/header">header</router-link>
 		|
-	</div>
+	</div> -->
 	<Header></Header>
 	<router-view></router-view>
 </template>
