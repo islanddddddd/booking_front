@@ -16,10 +16,15 @@ import adminhome from './views/admin/adminHome.vue'
 import planManagement from './views/plan/planManagement.vue'
 import facilityManagement from './views/admin/facilityManagement.vue'
 import reserve from './views/reserve.vue'
+import officeMap from './components/officeMap.vue'
 
 const router = createRouter({
 	history: createWebHashHistory(),
-	routes: [{
+	routes: [
+		{path:'/',
+		redirect:'/home',
+		},
+		{
 			path: "/login",
 			component: Login
 		},
@@ -55,7 +60,12 @@ const router = createRouter({
 			}, {
 				path: "/reserve",
 				name: "reserve",
-				component: reserve
+				component: reserve,
+				children: [{
+					path: "/officeMap",
+					name: "officeMap",
+					component: officeMap,
+				}]
 			}, {
 				path: "/order",
 				name: "order",
