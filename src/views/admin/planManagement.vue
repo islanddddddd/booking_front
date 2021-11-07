@@ -2,7 +2,7 @@
 	<h1>Plan Management</h1>
 	<div class="container-fluid text-center " style="padding: 0.9375rem;">
 		<div class="row col-6">
-			<div class="col align-self-center">Office</div>
+			<div class="col-2 align-self-center">Office</div>
 			<select class="form-select col" aria-label="Default select example">
 				<option v-for="(item, index) in offliceList" :value="item">{{ item }}</option>
 			</select>
