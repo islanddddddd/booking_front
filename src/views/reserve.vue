@@ -102,7 +102,8 @@ export default {
 					3: [{ from: 9 * 60, to: 12 * 60, class: 'business-hours' }, { from: 14 * 60, to: 18 * 60, class: 'business-hours' }],
 					4: dailyHours,
 					5: dailyHours
-				}
+				},
+				unit: 2
 			},
 			times: { startTime: '1', endTime: '1' }
 		};

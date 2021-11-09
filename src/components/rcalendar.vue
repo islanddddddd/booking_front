@@ -3,10 +3,35 @@
 	<!-- <vue-cal :time-from="msg.startTime * 60" :time-to="msg.endTime * 60" :special-hours="msg.specialHours" :disable-views="['years']" today-button :events="[events]" /> -->
 	<!-- <vue-cal :time-from="msg.startTime * 60" :time-to="msg.endTime * 60" :disable-views="['years']" today-button :events="[events]" @cell-dblclick="dbclick()" /> -->
 	<vue-cal
+		v-if="msg.unit == 0"
 		style="height: 25rem;"
 		:time-from="msg.startTime * 60"
 		:time-to="msg.endTime * 60"
 		:disable-views="['years', 'day', 'year', 'month']"
+		:special-hours="specialHours"
+		:dblclickToNavigate="false"
+		today-button
+		:events="[events]"
+		@cell-click="logEvents('cell-click ', $event)"
+	/>
+	<vue-cal
+		v-else-if="msg.unit == 1"
+		style="height: 25rem;"
+		:time-from="msg.startTime * 60"
+		:time-to="msg.endTime * 60"
+		:disable-views="['years', 'day', 'year', 'month']"
+		:special-hours="specialHours"
+		:dblclickToNavigate="false"
+		today-button
+		:events="[events]"
+		@cell-click="logEvents('cell-click ', $event)"
+	/>
+	<vue-cal
+		v-else-if="msg.unit == 2"
+		style="height: 25rem;"
+		:time-from="msg.startTime * 60"
+		:time-to="msg.endTime * 60"
+		:disable-views="['years', 'day', 'year', 'week']"
 		:special-hours="specialHours"
 		:dblclickToNavigate="false"
 		today-button
