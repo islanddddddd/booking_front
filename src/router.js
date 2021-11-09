@@ -17,12 +17,16 @@ import planManagement from './views/admin/planManagement.vue'
 import facilityManagement from './views/admin/facilityManagement.vue'
 import reserve from './views/reserve.vue'
 import officeMap from './components/officeMap.vue'
+import rcalendar from './components/rcalendar.vue'
+
+import testCal from './views/test/testCal.vue'
+
 
 const router = createRouter({
 	history: createWebHashHistory(),
-	routes: [
-		{path:'/',
-		redirect:'/home',
+	routes: [{
+			path: '/',
+			redirect: '/home',
 		},
 		{
 			path: "/login",
@@ -88,10 +92,16 @@ const router = createRouter({
 			component: Header
 		},
 		{
-			path: "/header",
-			name: "header",
-			component: Header
+			path: "/rcalendar",
+			name: "rcalendar",
+			component: rcalendar
 		},
+		{
+			path: "/testCal",
+			name: "testCal",
+			component: testCal
+		},
+
 
 	]
 })

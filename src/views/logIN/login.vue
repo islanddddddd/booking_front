@@ -63,6 +63,13 @@ export default {
   methods: {
     onSubmit() {
 		alert('登录')
+		axios.get(' http://127.0.0.1:8000/user/login/')
+		  .then(function (response) {
+		    console.log(response);
+		  })
+		  .catch(function (error) {
+		    console.log(error);
+		  });
 	},
   },
 };
