@@ -9,7 +9,7 @@
       <div id="body" class="modal-content rounded-5 shadow">
         <div class="modal-header p-5 pb-4 border-bottom-0">
           <!-- <h5 class="modal-title">Modal title</h5> -->
-          <h2 class="fw-bold mb-0">Sign up for free</h2>
+          <h2 class="fw-bold mb-0">Sign up</h2>
         </div>
 
         <div class="modal-body p-5 pt-0">
@@ -20,7 +20,7 @@
                 class="form-control rounded-4"
                 id="floatingInput"
                 placeholder="name@example.com"
-                v-model="email"
+                v-model="dataForm.email"
               />
               <label for="floatingInput">Email address</label>
             </div>
@@ -30,7 +30,7 @@
                 class="form-control rounded-4"
                 id="floatingPassword"
                 placeholder="Password"
-                v-model="passwd"
+                v-model="dataForm.passwd"
               />
               <label for="floatingPassword">Password</label>
             </div>
@@ -53,17 +53,31 @@
 
 <script>
 import axios from "axios";
+import {userLogin} from "../../utils/api";
 export default {
   data() {
     return {
-      email: "",
-      passwd: "",
+      dataForm: {
+        email: "",
+        passwd: "",
+      },
     };
   },
   methods: {
-    onSubmit() {
-		alert('登录')
-	},
+    async onSubmit() {
+      if (this.dataForm.email !== '' && this.dataForm.passwd !== '') {
+        const res = await userLogin(this.dataForm);
+        if (res.status === 200) {
+          console.log("登陆成功");
+          if (res.data.isAdmin) {
+            await this.$router.push('/adminHome')
+          } else {
+            await this.$router.push('/profile')
+          }
+        }
+      }
+      // alert('登录');
+    },
   },
 };
 </script>

@@ -10,18 +10,20 @@
 		<main>
 			<div class="container">
 				<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-					<div class="col" v-for="(item, index) in plan">
+					<div class="col" v-for="(item) in plan">
 						<div class="card mb-4 rounded-3 shadow-sm">
 							<div class="card-header py-3">
-								<h4 class="my-0 fw-normal">{{ index }}</h4>
+								<h4 class="my-0 fw-normal">{{ getUnitName(item.unit) }}</h4>
 							</div>
 							<div class="card-body">
 								<h1 class="card-title pricing-card-title">
 									${{ item.price }}
-									<small class="text-muted fw-light">/{{ item.unit }}</small>
+									<small class="text-muted fw-light">/{{ getUnitName(item.unit) }}</small>
 								</h1>
 								<ul class="list-unstyled mt-3 mb-4">
-									<li v-for="infoItem in item.info">{{ infoItem }}</li>
+                  <li>{{ item.description}}</li>
+                  <li> {{ getCategoryName(item.category) }}</li>
+<!--									<li v-for="infoItem in item.info">{{ infoItem }}</li>-->
 								</ul>
 								<button type="button" class="w-100 btn btn-lg btn-primary" @click="buy()">Buy</button>
 							</div>
@@ -43,7 +45,7 @@
 								<th scope="row" class="text-start">{{ index }}</th>
 								<td v-for="(checkItem, index) in item">
 									<svg
-										v-if="checkItem == 1"
+										v-if="checkItem === 1"
 										xmlns="http://www.w3.org/2000/svg"
 										width="16"
 										height="16"
@@ -70,6 +72,8 @@
 </template>
 
 <script>
+import {getPlan} from "../../utils/api";
+
 export default {
 	data() {
 		return {
@@ -116,10 +120,47 @@ export default {
 	},
 	methods: {
 		buy() {
+
 			alert('buy');
-		}
+		},
+    getCategoryName(category) {
+      if (category === 0) {
+        return "walk-in";
+      } else {
+        return "reservation";
+      }
+    },
+    getUnitName(unit) {
+      if (unit === 0) {
+        return "hour";
+      } else if (unit === 1) {
+        return "day";
+      } else if (unit === 2) {
+        return "week";
+      } else {
+        return "month";
+      }
+    },
+    async initPlan() {
+      const res = await getPlan()
+
+      if (res.status === 200) {
+        this.plan = [];
+        const data = res.data.data;
+        this.plan = data;
+        for (const d of data) {
+          console.log(d);
+
+        }
+
+        console.log(data);
+      }
+    }
 	},
-	components: {}
+	components: {},
+  created() {
+    this.initPlan();
+  }
 };
 </script>
 
