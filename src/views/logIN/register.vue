@@ -18,7 +18,6 @@
           <input
             type="text"
             class="form-control"
-            id="floatingPassword"
             placeholder="Password"
             v-model="formMess.firstName"
           />
@@ -42,7 +41,7 @@
               type="radio"
               name="inlineRadioOptions"
               id="inlineRadio1"
-              value="Male"
+              value="1"
               v-model="formMess.gender"
             />
             <label class="form-check-label" for="inlineRadio1">Male</label>
@@ -53,7 +52,7 @@
               type="radio"
               name="inlineRadioOptions"
               id="inlineRadio2"
-              value="Female"
+              value="0"
               v-model="formMess.gender"
             />
             <label class="form-check-label" for="inlineRadio2">Female</label>
@@ -64,7 +63,6 @@
           <input
             type="text"
             class="form-control"
-            id="floatingPassword"
             placeholder="Password"
             v-model="formMess.tel"
           />
@@ -75,7 +73,6 @@
           <input
             type="text"
             class="form-control"
-            id="floatingPassword"
             placeholder="Password"
             v-model="formMess.address"
           />
@@ -85,7 +82,6 @@
           <input
             type="email"
             class="form-control"
-            id="floatingPassword"
             placeholder="Password"
             v-model="formMess.email"
           />
@@ -95,7 +91,6 @@
           <input
             type="text"
             class="form-control"
-            id="floatingPassword"
             placeholder="Password"
             v-model="formMess.passwd"
           />
@@ -117,6 +112,7 @@
 
 <script>
 import axios from "axios";
+import {userRegister} from "../../utils/api";
 
 export default {
   name: "register",
@@ -126,7 +122,7 @@ export default {
         userName: "",
         firstName: "",
         lastName: "",
-        gender: "Male",
+        gender: "",
         tel: "",
         address: "",
         email: "",
@@ -136,26 +132,39 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.check();
 
-      if (this.checked == true) {
-        let formData = this.formMess;
-        console.log(formData);
-        console.log("-----------------");
+      if (this.checked === true) {
+        // var formData = new FormData();
+        // console.log(this.formMess["tel"])
+        // for(var key in this.formMess){
+        //   console.log(key);
+        //   formData.append(key,this.formMess[key]);
+        // }
+        // console.log(formData);
+        var formData = JSON.stringify(this.formMess); // 这里才是你的表单数据
 
-        axios({
-          method: "post",
-          url: " http://127.0.0.1:8000/user/register/",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-        }).then((res) => {
-          console.log(res);
-        });
-        // 接着写登陆逻辑
+        const res = await userRegister(this.formMess);
+        if (res.status === 200) {
+          console.log("注册成功！！！！");
+          await this.$router.push('/profile')
+        }
+        // console.log(formData);
+        // console.log("-----------------");
+        //
+        // axios({
+        //   method: "post",
+        //   url: " http://127.0.0.1:8000/user/register/",
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        //   withCredentials: true,
+        //   data: formData,
+        // }).then((res) => {
+        //   console.log(res);
+        // });
+        // // 接着写登陆逻辑
       } else {
         alert("请输入正确的表单");
       }

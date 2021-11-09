@@ -47,7 +47,7 @@ export default {
             method: 'post',
             baseURL: 'http://127.0.0.1:8010',
             url,
-            data: JSON.stringify(data),
+            data: qs.stringify(data),
             timeout: 10000,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
