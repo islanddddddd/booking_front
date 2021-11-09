@@ -117,6 +117,7 @@
 
 <script>
 import axios from "axios";
+import {userRegister} from "../../utils/api";
 
 export default {
   name: "register",
@@ -136,26 +137,29 @@ export default {
     };
   },
   methods: {
-    onSubmit() {
+    async onSubmit() {
       this.check();
 
-      if (this.checked == true) {
-        let formData = this.formMess;
-        console.log(formData);
-        console.log("-----------------");
-
-        axios({
-          method: "post",
-          url: " http://127.0.0.1:8000/user/register/",
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-          data: formData,
-        }).then((res) => {
-          console.log(res);
-        });
-        // 接着写登陆逻辑
+      if (this.checked === true) {
+        const res = await userRegister(this.formMess);
+        if (res.status === 200) {
+          console.log("注册成功！！！！");
+        }
+        // console.log(formData);
+        // console.log("-----------------");
+        //
+        // axios({
+        //   method: "post",
+        //   url: " http://127.0.0.1:8000/user/register/",
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        //   withCredentials: true,
+        //   data: formData,
+        // }).then((res) => {
+        //   console.log(res);
+        // });
+        // // 接着写登陆逻辑
       } else {
         alert("请输入正确的表单");
       }

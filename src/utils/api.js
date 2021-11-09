@@ -1,10 +1,10 @@
 import http from '../utils/http'
-import Cookies from 'js-cookie'
 
 
 export const baseImgPath = 'http://127.0.0.1:8010/api'
 export const baseUrl = 'http://127.0.0.1:8010'
 
+export const userRegister = data => http.post('/user/register', data);
 
 export const updateProfile = data => http.post('/api/profile', data);
 
