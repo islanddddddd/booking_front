@@ -82,10 +82,25 @@
       <th scope="col" v-for="(item, index) in dataTitle">{{ item }}</th>
     </tr>
     </thead>
+    <!--    <tbody>-->
+    <!--    <tr v-for="(item, index) in data" :class="tableClassByTypeId[item.typeId-1]">-->
+    <!--      <th>{{ index }}</th>-->
+    <!--      <td v-for="(item, index) in item">{{ item }}</td>-->
+    <!--      <td>-->
+    <!--        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar"-->
+    <!--                @click="select(index)">select-->
+    <!--        </button>-->
+    <!--      </td>-->
+    <!--    </tr>-->
+    <!--    </tbody>-->
     <tbody>
-    <tr v-for="(item, index) in data" :class="tableClassByTypeId[item.typeId-1]">
+    <tr v-for="(item, index) in facilityData" :class="tableClassByTypeId[item.typeId-1]">
       <th>{{ index }}</th>
-      <td v-for="(item, index) in item">{{ item }}</td>
+      <!--				<td v-for="(item, index) in item">{{ item }}</td>-->
+      <td> {{ item.facility_id }}</td>
+      <td> {{ item.number }}</td>
+      <td> {{ item.centerId }}</td>
+      <td> {{ item.typeId }}</td>
       <td>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar"
                 @click="select(index)">select
@@ -93,17 +108,6 @@
       </td>
     </tr>
     </tbody>
-    <!--    <tbody>-->
-    <!--			<tr v-for="(item, index) in facilityData">-->
-    <!--				<th>{{ index }}</th>-->
-    <!--&lt;!&ndash;				<td v-for="(item, index) in item">{{ item }}</td>&ndash;&gt;-->
-    <!--        <td> {{ item.facility_id }}</td>-->
-    <!--        <td> {{ item.number }}</td>-->
-    <!--        <td> {{ item.centerId }}</td>-->
-    <!--        <td> {{ item.typeId }}</td>-->
-    <!--				<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar" @click="select(index)">select</button></td>-->
-    <!--			</tr>-->
-    <!--		</tbody>-->
   </table>
 </template>
 
@@ -292,7 +296,7 @@ export default {
       const res = await getFacility({"center_ID": this.selectedOffice});
       if (res.status === 200) {
         console.log(res.data)
-        // this.facilityData = res.data.data;
+        this.facilityData = res.data.data;
       }
     }
   },
