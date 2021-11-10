@@ -1,9 +1,9 @@
 <template>
   <div
-    class="modal modal-signin position-static d-block bg-Light py-5"
-    tabindex="-1"
-    role="dialog"
-    id="modalSignin"
+      class="modal modal-signin position-static d-block bg-Light py-5"
+      tabindex="-1"
+      role="dialog"
+      id="modalSignin"
   >
     <div class="modal-dialog" role="document">
       <div id="body" class="modal-content rounded-5 shadow">
@@ -16,28 +16,27 @@
           <form class="">
             <div class="form-floating mb-3">
               <input
-                type="email"
-                class="form-control rounded-4"
-                id="floatingInput"
-                placeholder="name@example.com"
-                v-model="dataForm.email"
+                  type="email"
+                  class="form-control rounded-4"
+                  id="floatingInput"
+                  placeholder="name@example.com"
+                  v-model="dataForm.email"
               />
               <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating mb-3">
               <input
-                type="password"
-                class="form-control rounded-4"
-                id="floatingPassword"
-                placeholder="Password"
-                v-model="dataForm.passwd"
+                  type="password"
+                  class="form-control rounded-4"
+                  id="floatingPassword"
+                  placeholder="Password"
+                  v-model="dataForm.passwd"
               />
               <label for="floatingPassword">Password</label>
             </div>
             <button
-              class="w-100 mb-2 btn btn-lg rounded-4 btn-primary"
-              type="submit"
-			  @click="onSubmit()"
+                class="w-100 mb-2 btn btn-lg rounded-4 btn-primary"
+                @click="onSubmit()"
             >
               Sign in
             </button>
@@ -68,7 +67,6 @@ export default {
         if (res.status === 200) {
           const user = res.data.user
           console.log("登陆成功");
-          console.log()
           Cookies.set("userId", user.userId);
           Cookies.set("admin", user.admin);
           if (res.data.isAdmin) {
@@ -108,7 +106,7 @@ export default {
   border: solid rgba(0, 0, 0, 0.15);
   border-width: 1px 0;
   box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1),
-    inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+  inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
 }
 
 .bi {
