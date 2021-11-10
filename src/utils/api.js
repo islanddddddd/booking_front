@@ -8,5 +8,8 @@ export const userRegister = data => http.post('/user/register/', data);
 
 export const userLogin = data => http.post("/user/login/", data);
 
-export const getPlan= () => http.get("/manage/get_plan/");
+export const getPlan = () => http.post("/manage/get_plan/");
 
+export const getOffice = () => http.post("/manage/get_office/");
+
+export const getFacility = data => http.get("/manage/get_facility/", data);

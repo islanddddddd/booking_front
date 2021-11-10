@@ -59,8 +59,8 @@
 	<div class="container-fluid text-center " style="padding: 0.9375rem;">
 		<div class="row col-6">
 			<div class="col-2 align-self-center">Office</div>
-			<select class="form-select col" aria-label="Default select example">
-				<option v-for="(item, index) in offliceList" :value="item">{{ item }}</option>
+			<select class="form-select col" v-model="selectedOffice" aria-label="Default select example">
+				<option v-for="item in offliceList" :value="item.centerId">{{ item.district}}</option>
 			</select>
 			<!-- <button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Select</button> -->
 		</div>
@@ -72,10 +72,21 @@
 				<th scope="col" v-for="(item, index) in dataTitle">{{ item }}</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr v-for="(item, index) in data">
+<!--		<tbody>-->
+<!--			<tr v-for="(item, index) in data">-->
+<!--				<th>{{ index }}</th>-->
+<!--				<td v-for="(item, index) in item">{{ item }}</td>-->
+<!--				<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar" @click="select(index)">select</button></td>-->
+<!--			</tr>-->
+<!--		</tbody>-->
+    <tbody>
+			<tr v-for="(item, index) in facilityData">
 				<th>{{ index }}</th>
-				<td v-for="(item, index) in item">{{ item }}</td>
+<!--				<td v-for="(item, index) in item">{{ item }}</td>-->
+        <td> {{ item.facility_id }}</td>
+        <td> {{ item.number }}</td>
+        <td> {{ item.centerId }}</td>
+        <td> {{ item.typeId }}</td>
 				<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar" @click="select(index)">select</button></td>
 			</tr>
 		</tbody>
@@ -85,6 +96,7 @@
 <script>
 import Sidebar from '../components/sidebar.vue';
 import rcalendar from '../components/rcalendar.vue';
+import {getFacility, getOffice} from "../utils/api";
 const dailyHours = { from: 1 * 60, to: 5 * 60, class: 'business-hours' };
 export default {
 	components: {
@@ -94,8 +106,10 @@ export default {
 	emits: ['childFn'],
 	data() {
 		return {
+      selectedOffice: '',
 			offliceList: ['office1', 'office2', 'office3'], //办公室列表
-			dataTitle: ['FacilityId', 'FacilityType', 'FacilityPrice', 'select'], //控制表格的表头
+			dataTitle: ['FacilityId', 'Number', 'CenterId', 'TypeId'], //控制表格的表头
+      facilityData: [],
 			data: {
 				//座位数数据
 				'1': {
@@ -177,8 +191,34 @@ export default {
 		fatherClick() {
 			let jumptosecond = document.getElementById('jumptosecond');
 			jumptosecond.click();
-		}
-	}
+		},
+    async initData() {
+      const res = await getOffice();
+      if (res.status === 200) {
+        const data = res.data.data
+        this.offliceList = [];
+        console.log(data);
+        this.offliceList = data;
+      }
+    },
+    async getFacility() {
+      const res = await getFacility({"center_ID": this.selectedOffice});
+      if (res.status === 200) {
+        console.log(res.data)
+        this.facilityData = res.data.data;
+      }
+    }
+	},
+
+  created() {
+    this.initData();
+  },
+  watch: {
+    selectedOffice: function (newV, oldV) {
+      console.log("changed!!")
+      this.getFacility();
+      }
+    }
 };
 </script>
 
