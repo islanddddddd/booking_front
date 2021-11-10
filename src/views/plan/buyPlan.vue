@@ -8,25 +8,25 @@
 						<div class="row g-3">
 							<div class="col-12">
 								<p for="operater_id" class="form-label  text-left">OperaterId</p>
-								<input type="text" class="form-control" v-model="operater_id" />
+								<input type="text" class="form-control" v-model="tableData.operater_id" />
 							</div>
 							<div class="col-12">
 								<p for="firstName" class="form-label  text-left">UserId</p>
-								<input type="text" class="form-control" v-model="userId" />
+								<input type="text" class="form-control" v-model="tableData.userId" />
 							</div>
-					
-							<div class="col-md-4">
-								<label for="state" class="form-label">PlanId</label>
-								<select class="form-select" id="state" required>
-									<option value="">Choose...</option>
-									<option>1</option>
-									<option>2</option>
-									<option>3</option>
-								</select>
-							</div>
+
+<!--							<div class="col-md-4">-->
+<!--								<label for="state" class="form-label">PlanId</label>-->
+<!--								<select class="form-select" id="state" required>-->
+<!--									<option value="">Choose...</option>-->
+<!--									<option>1</option>-->
+<!--									<option>2</option>-->
+<!--									<option>3</option>-->
+<!--								</select>-->
+<!--							</div>-->
 							<div class="col-12">
 								<p for="firstName" class="form-label  text-left">Num</p>
-								<input type="text" class="form-control" v-model="num" />
+								<input type="text" class="form-control" v-model="tableData.num" />
 							</div>
 						</div>
 						<hr class="my-4" />
@@ -39,21 +39,33 @@
 </template>
 
 <script>
+import {buyPlan} from "../../utils/api";
+
 export default {
 	data() {
 		return {
+      tableData: {},
 			operater_id: '',
 			userId:'',
-			PlanId:'',
+			planId:'',
 			num:''
 		};
 	},
 	methods: {
-		buy() {
-			alert('buy');
-		}
+		async buy() {
+      alert('buy');
+      if (this.tableData.userId && this.tableData.planId && this.tableData.num) {
+        const res = await buyPlan(this.tableData);
+        if (res.status === 200) {
+          console.log("buy success");
+        }
+      }
+    }
 	},
-	components: {}
+	components: {},
+  created() {
+    this.tableData.planId = this.$route.params.planId
+  }
 };
 </script>
 

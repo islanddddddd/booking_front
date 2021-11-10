@@ -68,6 +68,7 @@ export default {
         if (res.status === 200) {
           const user = res.data.user
           console.log("登陆成功");
+          console.log()
           Cookies.set("userId", user.userId);
           Cookies.set("admin", user.admin);
           if (res.data.isAdmin) {

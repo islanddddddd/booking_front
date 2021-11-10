@@ -41,7 +41,11 @@ export default {
 			alert(userid);
 		}
 	},
-	components: {}
+	components: {},
+  created() {
+    const userId = Cookies.get("userId");
+
+  }
 };
 </script>
 
