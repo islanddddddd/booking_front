@@ -19,7 +19,7 @@
 		style="height: 25rem;"
 		:time-from="msg.startTime * 60"
 		:time-to="msg.endTime * 60"
-		:disable-views="['years', 'day', 'year', 'month']"
+		:disable-views="['years', 'day', 'year', 'week']"
 		:special-hours="specialHours"
 		:dblclickToNavigate="false"
 		today-button
@@ -83,6 +83,8 @@ export default {
 
 			var day = '7123456'.charAt(new Date(e).getDay());
 			this.times.day = day;
+			
+			this.times.jump = true;
 
 			// this.specialHours.day={this.times.startTime*60}
 			// if(day==1){

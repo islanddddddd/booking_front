@@ -24,10 +24,11 @@
 
 				<!-- 模态框底部 -->
 				<div class="modal-footer"><button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button></div>
+				<button style="display:none" id="jumptosecond" class="btn btn-primary" data-bs-target="#times" data-bs-toggle="modal">Open second modal</button>
 			</div>
 		</div>
 	</div>
-
+	<!-- 二级模态框 -->
 	<div class="modal fade" id="times" aria-hidden="true" aria-labelledby="times" tabindex="-1">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
@@ -46,13 +47,14 @@
 							<input type="text" class="form-control" v-model="times.endTime" readonly="readonly" />
 							<label for="floatingInput">结束时间</label>
 						</div>
-						<button class="btn btn-primary" data-bs-target="#times" data-bs-toggle="modal">Open second modal</button>
+						<!-- <button class="btn btn-primary" data-bs-target="#times" data-bs-toggle="modal">Open second modal</button> -->
 					</div>
 				</div>
-				<div class="modal-footer"><button class="btn btn-primary" data-bs-target="#calendar" data-bs-toggle="modal">Back to first</button></div>
+				<div class="modal-footer"><button class="btn btn-primary" data-bs-target="#calendar" data-bs-toggle="modal">Back</button></div>
 			</div>
 		</div>
 	</div>
+	<!-- 二级模态框 -->
 
 	<div class="container-fluid text-center " style="padding: 0.9375rem;">
 		<div class="row col-6">
@@ -149,9 +151,10 @@ export default {
 					4: dailyHours,
 					5: dailyHours
 				},
-				unit: 2
+				unit: 2,
+				jump:0
 			},
-			times: { startTime: '1', endTime: '1' } //日历组件传回的数据
+			times: { startTime: '1', endTime: '1', jump: '0' } //日历组件传回的数据
 		};
 	},
 	methods: {
@@ -170,6 +173,15 @@ export default {
 		getTime(times) {
 			console.log(times.specialHours);
 			this.times = times;
+		}
+	},
+	watch: {
+		// 如果 `question` 发生改变，这个函数就会运行
+		times: function() {
+			alert(666);
+			if(this.msg.jump!=0){}
+			let jumptosecond = document.getElementById('jumptosecond');
+			jumptosecond.click();
 		}
 	}
 };
