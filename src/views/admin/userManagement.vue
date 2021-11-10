@@ -120,15 +120,7 @@
               />
               <label for="floatingPassword">Email</label>
             </div>
-            <div class="form-floating">
-              <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Password"
-                  v-model="modifyTable.passwd"
-              />
-              <label for="floatingPassword">Password</label>
-            </div>
+
 
             <button
                 class="w-100 btn btn-lg btn-primary"
