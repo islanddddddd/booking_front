@@ -24,7 +24,7 @@
 		:dblclickToNavigate="false"
 		today-button
 		:events="[events]"
-		@cell-click="logEvents('cell-click ', $event)"
+		@cell-click="getDay('cell-click ', $event)"
 	/>
 	<vue-cal
 		v-else-if="msg.unit == 2"
@@ -83,8 +83,30 @@ export default {
 
 			var day = '7123456'.charAt(new Date(e).getDay());
 			this.times.day = day;
-			
+
 			this.times.jump = true;
+
+			// this.specialHours.day={this.times.startTime*60}
+			// if(day==1){
+			// 	this.times.specialHours.=7
+			// }
+			this.$emit('childFn', this.times);
+		},
+		getDay(s, e) {
+			console.log(s);
+			console.log(e);
+			console.log(this.$props.msg);
+			console.log(e.getHours());
+			
+			// this.times.date = new Date(e).format('YYYY-MM-DD');
+			// this.times.startTime = new Date(e).format('YYYY-MM-DD');
+			
+			// // let addTime = e.setHours();
+			// this.times.endTime = new Date(addTime).format('YYYY-MM-DD');
+
+			// var day = '7123456'.charAt(new Date(e).getDay());
+			// this.times.day = day;
+
 
 			// this.specialHours.day={this.times.startTime*60}
 			// if(day==1){
