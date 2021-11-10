@@ -145,7 +145,7 @@ export default {
       this.times.month = new Date(e).getMonth()
       this.times.days = new Date(e).getDate()
       this.times.hours = new Date(e).getHours()
-      
+
 
       // this.specialHours.day={this.times.startTime*60}
       // if(day==1){
