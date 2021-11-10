@@ -64,7 +64,7 @@ export default {
       end: '2021-11-19 14:00',
       class: 'badevents'
     },
-    times: {startTime: '', endTime: '', date: '', specialHours: []},
+    times: {},
     specialHours: {},
     unit: 0,
   }),
@@ -80,18 +80,18 @@ export default {
       e.stopPropagation();
     },
     logEvents(s, e) {
-      console.log(s);
-      console.log(e);
-      console.log(e.getHours());
+      // 这是弃用的,但还有点用
       this.times.date = new Date(e).format('YYYY-MM-DD');
       this.times.startTime = new Date(e).format('HH:00');
       let addTime = e.setHours(e.getHours() + 1);
       this.times.endTime = new Date(addTime).format('HH:00');
 
-      var day = '7123456'.charAt(new Date(e).getDay());
-      this.times.day = day;
+      this.times.unit = this.unit
+      this.times.year = new Date(e).getFullYear()
+      this.times.month = new Date(e).getMonth()
+      this.times.days = new Date(e).getDate()
+      this.times.hours = new Date(e).getHours()
 
-      this.times.jump = true;
 
       // this.specialHours.day={this.times.startTime*60}
       // if(day==1){
@@ -101,58 +101,51 @@ export default {
       this.$emit('father-click');
     },
     getDay(s, e) {
-      console.log(s);
-      console.log(e);
-      // console.log(this.$props.msg);
+
+      //旧的
       let startTime, endTime, time1, time2;
       time1 = this.$props.msg.startTime;
       time2 = this.$props.msg.endTime;
-
       this.times.date = new Date(e).format('YYYY-MM-DD');
-
       startTime = e.setHours(time1);
       startTime = new Date(startTime).format('YYYY-MM-DD-HH:00');
       this.times.startTime = startTime;
-
       let addTime = e.setHours(time2);
       this.times.endTime = new Date(addTime).format('YYYY-MM-DD-HH:00');
 
-      // var day = '7123456'.charAt(new Date(e).getDay());
-      // this.times.day = day;
+      //新的
+      this.times.unit = this.unit
+      this.times.year = new Date(e).getFullYear()
+      this.times.month = new Date(e).getMonth()
+      this.times.days = new Date(e).getDate()
+      this.times.hours = new Date(e).getHours()
 
-      // this.specialHours.day={this.times.startTime*60}
-      // if(day==1){
-      // 	this.times.specialHours.=7
-      // }
-      // console.log(this.times);
       this.$emit('childFn', this.times);
       this.$emit('father-click');
     },
     getWeek(s, e) {
-      console.log(s);
-      console.log(e);
-      // console.log(this.$props.msg);
+      //旧的
       let startTime, endTime, time1, time2;
       // 分别是预约开始时间,预约结束时间,开业时间,关门时间
       time1 = this.$props.msg.startTime;
       time2 = this.$props.msg.endTime;
-
       this.times.date = new Date(e).format('YYYY-MM-DD');
-
       startTime = e.setHours(time1);
       startTime = new Date(startTime).format('YYYY-MM-DD-HH:00');
       this.times.startTime = startTime;
-
-      // endTime = e.setHours(time2);
       let addTime = new Date(e);
       endTime = addTime.setDate(addTime.getDate() + 7);
       endTime = addTime.setHours(time2);
       endTime = new Date(endTime).setHours(time2);
-
       this.times.endTime = new Date(endTime).format('YYYY-MM-DD-HH:00');
 
-      // var day = '7123456'.charAt(new Date(e).getDay());
-      // this.times.day = day;
+      //新的
+      this.times.unit = this.unit
+      this.times.year = new Date(e).getFullYear()
+      this.times.month = new Date(e).getMonth()
+      this.times.days = new Date(e).getDate()
+      this.times.hours = new Date(e).getHours()
+      
 
       // this.specialHours.day={this.times.startTime*60}
       // if(day==1){
