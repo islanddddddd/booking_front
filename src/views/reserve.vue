@@ -127,7 +127,7 @@ export default {
       activeClass: 'active',
       errorClass: 'text-danger',
       selectedOffice: '',
-      isAdmin: Cookies.get("admin"),   /*是不是管理员*/
+      isAdmin: Cookies.get("admin") === "true",   /*是不是管理员*/
       aUserId: '',
       offliceList: ['office1', 'office2', 'office3'], //办公室列表
       dataTitle: ['FacilityId', 'Number', 'CenterId', 'TypeId'], //控制表格的表头
@@ -233,9 +233,40 @@ export default {
       this.times = times;
     },
 
+    getDataAddByAdmin() {
+      const fa = this.data[this.selectedFacilityIndex];
+      return {
+        facility_id: fa.facility_id,
+        typeId: fa.typeId,
+        unit: fa.unit,
+        userId: this.aUserId,
+        year: this.times.year,
+        month: this.month,
+        days: this.days,
+        hours: this.hours,
+        operater_id: Cookies.get('userId'),
+      };
+    },
 
+    getDataAddByUser() {
+      const fa = this.data[this.selectedFacilityIndex];
+      return {
+        facility_id: fa.facility_id,
+        typeId: fa.typeId,
+        unit: fa.unit,
+        userId: Cookies.get('userId'),
+        year: this.times.year,
+        month: this.month,
+        days: this.days,
+        hours: this.hours,
+        operater_id: '',
+      };
+    },
     async confirmBtn() {
       const fa = this.data[this.selectedFacilityIndex];
+      if (this.isAdmin === "true") {
+
+      }
       const res = await addReserve({
         facility_id: fa.facility_id,
         typeId: fa.typeId,
@@ -246,7 +277,7 @@ export default {
         days: '',
         hours: '',
         operater_id: '',
-      })
+      });
     },
     fatherClick() {
       let jumptosecond = document.getElementById('jumptosecond');
