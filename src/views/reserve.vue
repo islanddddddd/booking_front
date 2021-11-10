@@ -41,16 +41,18 @@
 						<h4>{{ times.date }}</h4>
 						<div class="form-floating">
 							<input type="text" class="form-control" v-model="times.startTime" readonly="readonly" />
-							<label for="floatingInput">开始时间</label>
+							<label>开始时间</label>
 						</div>
 						<div class="form-floating">
 							<input type="text" class="form-control" v-model="times.endTime" readonly="readonly" />
-							<label for="floatingInput">结束时间</label>
+							<label>结束时间</label>
 						</div>
 						<!-- <button class="btn btn-primary" data-bs-target="#times" data-bs-toggle="modal">Open second modal</button> -->
+
 					</div>
 				</div>
-				<div class="modal-footer"><button class="btn btn-primary" data-bs-target="#calendar" data-bs-toggle="modal">Back</button></div>
+				<div class="modal-footer"><button  class="btn btn-primary" @click="confirmBtn">Confirm</button>
+          <button class="btn btn-primary" data-bs-target="#calendar" data-bs-toggle="modal">Back</button></div>
 			</div>
 		</div>
 	</div>
@@ -72,28 +74,30 @@
 				<th scope="col" v-for="(item, index) in dataTitle">{{ item }}</th>
 			</tr>
 		</thead>
-<!--		<tbody>-->
-<!--			<tr v-for="(item, index) in data">-->
-<!--				<th>{{ index }}</th>-->
-<!--				<td v-for="(item, index) in item">{{ item }}</td>-->
-<!--				<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar" @click="select(index)">select</button></td>-->
-<!--			</tr>-->
-<!--		</tbody>-->
-    <tbody>
-			<tr v-for="(item, index) in facilityData">
+		<tbody>
+			<tr v-for="(item, index) in data">
 				<th>{{ index }}</th>
-<!--				<td v-for="(item, index) in item">{{ item }}</td>-->
-        <td> {{ item.facility_id }}</td>
-        <td> {{ item.number }}</td>
-        <td> {{ item.centerId }}</td>
-        <td> {{ item.typeId }}</td>
+				<td v-for="(item, index) in item">{{ item }}</td>
 				<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar" @click="select(index)">select</button></td>
 			</tr>
 		</tbody>
+<!--    <tbody>-->
+<!--			<tr v-for="(item, index) in facilityData">-->
+<!--				<th>{{ index }}</th>-->
+<!--&lt;!&ndash;				<td v-for="(item, index) in item">{{ item }}</td>&ndash;&gt;-->
+<!--        <td> {{ item.facility_id }}</td>-->
+<!--        <td> {{ item.number }}</td>-->
+<!--        <td> {{ item.centerId }}</td>-->
+<!--        <td> {{ item.typeId }}</td>-->
+<!--				<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar" @click="select(index)">select</button></td>-->
+<!--			</tr>-->
+<!--		</tbody>-->
 	</table>
 </template>
 
 <script>
+import Cookies from 'js-cookie'
+
 import Sidebar from '../components/sidebar.vue';
 import rcalendar from '../components/rcalendar.vue';
 import {getFacility, getOffice} from "../utils/api";
@@ -109,6 +113,7 @@ export default {
       selectedOffice: '',
 			offliceList: ['office1', 'office2', 'office3'], //办公室列表
 			dataTitle: ['FacilityId', 'Number', 'CenterId', 'TypeId'], //控制表格的表头
+      selectedFacilityIndex:'',
       facilityData: [],
 			data: {
 				//座位数数据
@@ -174,8 +179,8 @@ export default {
 	methods: {
 		select(index) {
 			let dataIndexms = this.data[index];
-			this.msg = this.msg;
 			this.msg = dataIndexms;
+      this.selectedFacilityIndex = index;
 			console.log(dataIndexms);
 		},
 		deleteUser(userid) {
@@ -188,6 +193,20 @@ export default {
 			console.log(times);
 			this.times = times;
 		},
+    async confirmBtn() {
+      const fa = this.data[this.selectedFacilityIndex];
+      const res = await addReserve({
+        facility_id: fa.facility_id,
+        typeId: fa.typeId,
+        unit: fa.unit,
+        userId: Cookies.get("userId"),
+        year: '',
+        month: '',
+        days: '',
+        hours: '',
+        operater_id: '',
+      })
+    },
 		fatherClick() {
 			let jumptosecond = document.getElementById('jumptosecond');
 			jumptosecond.click();
@@ -205,7 +224,7 @@ export default {
       const res = await getFacility({"center_ID": this.selectedOffice});
       if (res.status === 200) {
         console.log(res.data)
-        this.facilityData = res.data.data;
+        // this.facilityData = res.data.data;
       }
     }
 	},

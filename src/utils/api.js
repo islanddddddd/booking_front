@@ -13,3 +13,6 @@ export const getPlan = () => http.post("/manage/get_plan/");
 export const getOffice = () => http.post("/manage/get_office/");
 
 export const getFacility = data => http.get("/manage/get_facility/", data);
+
+export const addReserve = data => http.post("/manage/add_reserve/", data);
+
