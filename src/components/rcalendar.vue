@@ -83,7 +83,7 @@ export default {
 
 			var day = '7123456'.charAt(new Date(e).getDay());
 			this.times.day = day;
-			
+
 			this.times.jump = true;
 
 			// this.specialHours.day={this.times.startTime*60}
@@ -91,6 +91,7 @@ export default {
 			// 	this.times.specialHours.=7
 			// }
 			this.$emit('childFn', this.times);
+      this.$emit("father-click")
 		}
 	}
 };
