@@ -40,6 +40,7 @@
             >
               Sign in
             </button>
+            <button type="button" class="btn btn-link" @click="toRegister">register</button>
             <small class="text-muted">By clicking Sign in, you agree to the terms of use.</small>
           </form>
         </div>
@@ -51,6 +52,7 @@
 <script>
 import Cookies from "js-cookie";
 import {userLogin} from "../../utils/api";
+
 export default {
   data() {
     return {
@@ -78,6 +80,10 @@ export default {
       }
       // alert('登录');
     },
+    toRegister() {
+      this.$router.push('/register')
+    }
+
   },
 };
 </script>
@@ -100,6 +106,7 @@ export default {
     font-size: 3.5rem;
   }
 }
+
 .b-example-divider {
   height: 3rem;
   background-color: rgba(0, 0, 0, 0.1);
@@ -117,9 +124,11 @@ export default {
 .rounded-4 {
   border-radius: 0.5rem;
 }
+
 .rounded-5 {
   border-radius: 0.75rem;
 }
+
 .rounded-6 {
   border-radius: 1rem;
 }
@@ -128,6 +137,7 @@ export default {
   width: 380px;
   transition: bottom 0.75s ease-in-out;
 }
+
 .modal-sheet .modal-footer {
   padding-bottom: 2rem;
 }

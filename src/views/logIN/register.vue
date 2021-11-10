@@ -147,8 +147,8 @@ export default {
 
         const res = await userRegister(this.formMess);
         if (res.status === 200) {
-          console.log("注册成功！！！！");
-          await this.$router.push('/profile')
+          alert('register was successful')
+          await this.$router.push('/login')
         }
         // console.log(formData);
         // console.log("-----------------");
