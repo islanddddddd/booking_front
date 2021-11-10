@@ -152,7 +152,7 @@ export default {
 					5: dailyHours
 				},
 				unit: 2,
-				jump:0
+				jump: 0
 			},
 			times: { startTime: '1', endTime: '1', jump: '0' } //日历组件传回的数据
 		};
@@ -171,14 +171,14 @@ export default {
 			alert(userid);
 		},
 		getTime(times) {
-			console.log(times.specialHours);
+			console.log(times);
 			this.times = times;
 		},
-    fatherClick() {
-      let jumptosecond = document.getElementById('jumptosecond');
-      jumptosecond.click();
-    }
-	},
+		fatherClick() {
+			let jumptosecond = document.getElementById('jumptosecond');
+			jumptosecond.click();
+		}
+	}
 };
 </script>
 
