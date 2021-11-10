@@ -25,7 +25,7 @@
                   <li> {{ getCategoryName(item.category) }}</li>
 <!--									<li v-for="infoItem in item.info">{{ infoItem }}</li>-->
 								</ul>
-								<button type="button" class="w-100 btn btn-lg btn-primary" @click="buy()">Buy</button>
+								<button type="button" class="w-100 btn btn-lg btn-primary" @click="buy(item.planId)">Buy</button>
 							</div>
 						</div>
 					</div>
@@ -119,9 +119,13 @@ export default {
 		};
 	},
 	methods: {
-		buy() {
-
-			alert('buy');
+		buy(planId) {
+      this.$router.push({
+        name: 'buyPlan',
+        params: {
+          planId: planId
+        }
+      })
 		},
     getCategoryName(category) {
       if (category === 0) {

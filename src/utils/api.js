@@ -16,3 +16,4 @@ export const getFacility = data => http.get("/manage/get_facility/", data);
 
 export const addReserve = data => http.post("/manage/add_reserve/", data);
 
+export const buyPlan = data => http.post("/manage/buy_plan/");

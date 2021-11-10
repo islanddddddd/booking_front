@@ -51,7 +51,6 @@
 <script>
 import Cookies from "js-cookie";
 import {userLogin} from "../../utils/api";
-
 export default {
   data() {
     return {
@@ -68,7 +67,6 @@ export default {
         if (res.status === 200) {
           const user = res.data.user
           console.log("登陆成功");
-
           Cookies.set("userId", user.userId);
           Cookies.set("admin", user.admin);
           if (res.data.isAdmin) {
@@ -102,7 +100,6 @@ export default {
     font-size: 3.5rem;
   }
 }
-
 .b-example-divider {
   height: 3rem;
   background-color: rgba(0, 0, 0, 0.1);
@@ -120,11 +117,9 @@ export default {
 .rounded-4 {
   border-radius: 0.5rem;
 }
-
 .rounded-5 {
   border-radius: 0.75rem;
 }
-
 .rounded-6 {
   border-radius: 1rem;
 }
@@ -133,7 +128,6 @@ export default {
   width: 380px;
   transition: bottom 0.75s ease-in-out;
 }
-
 .modal-sheet .modal-footer {
   padding-bottom: 2rem;
 }
