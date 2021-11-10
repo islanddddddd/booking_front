@@ -41,9 +41,7 @@
             >
               Sign up
             </button>
-            <small class="text-muted"
-              >By clicking Sign up, you agree to the terms of use.</small
-            >
+            <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
           </form>
         </div>
       </div>
@@ -52,7 +50,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import Cookies from "js-cookie";
 import {userLogin} from "../../utils/api";
 export default {
   data() {
@@ -68,7 +66,10 @@ export default {
       if (this.dataForm.email !== '' && this.dataForm.passwd !== '') {
         const res = await userLogin(this.dataForm);
         if (res.status === 200) {
+          const user = res.data.user
           console.log("登陆成功");
+          Cookies.set("userId", user.userId);
+          Cookies.set("admin", user.admin);
           if (res.data.isAdmin) {
             await this.$router.push('/adminHome')
           } else {

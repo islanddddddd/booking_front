@@ -127,6 +127,8 @@ export default {
       activeClass: 'active',
       errorClass: 'text-danger',
       selectedOffice: '',
+      isAdmin: Cookies.get("admin"),   /*是不是管理员*/
+      aUserId: '',
       offliceList: ['office1', 'office2', 'office3'], //办公室列表
       dataTitle: ['FacilityId', 'Number', 'CenterId', 'TypeId'], //控制表格的表头
       selectedFacilityIndex: '',
@@ -230,6 +232,8 @@ export default {
       console.log(times);
       this.times = times;
     },
+
+
     async confirmBtn() {
       const fa = this.data[this.selectedFacilityIndex];
       const res = await addReserve({
