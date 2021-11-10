@@ -112,7 +112,7 @@ import Cookies from 'js-cookie'
 
 import Sidebar from '../components/sidebar.vue';
 import rcalendar from '../components/rcalendar.vue';
-import {getFacility, getOffice} from "../utils/api";
+import {addReserve, getFacility, getOffice} from "../utils/api";
 
 const dailyHours = {from: 1 * 60, to: 5 * 60, class: 'business-hours'};
 export default {
@@ -264,20 +264,16 @@ export default {
     },
     async confirmBtn() {
       const fa = this.data[this.selectedFacilityIndex];
-      if (this.isAdmin === "true") {
-
+      let data;
+      if (this.isAdmin) {
+        data = this.getDataAddByAdmin();
+      } else {
+        data = this.getDataAddByUser();
       }
-      const res = await addReserve({
-        facility_id: fa.facility_id,
-        typeId: fa.typeId,
-        unit: fa.unit,
-        userId: Cookies.get("userId"),
-        year: '',
-        month: '',
-        days: '',
-        hours: '',
-        operater_id: '',
-      });
+      const res = await addReserve(data);
+      if (res.status === 200) {
+        console.log("add success");
+      }
     },
     fatherClick() {
       let jumptosecond = document.getElementById('jumptosecond');
