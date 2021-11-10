@@ -19,7 +19,7 @@
 
 				<!-- 模态框内容 -->
 				<div class="modal-body">
-					<div><rcalendar :msg="msg" @childFn="getTime"></rcalendar></div>
+					<div><rcalendar :msg="msg" @father-click="fatherClick" @childFn="getTime"></rcalendar></div>
 				</div>
 
 				<!-- 模态框底部 -->
@@ -173,17 +173,12 @@ export default {
 		getTime(times) {
 			console.log(times.specialHours);
 			this.times = times;
-		}
+		},
+    fatherClick() {
+      let jumptosecond = document.getElementById('jumptosecond');
+      jumptosecond.click();
+    }
 	},
-	watch: {
-		// 如果 `question` 发生改变，这个函数就会运行
-		times: function() {
-			alert(666);
-			if(this.msg.jump!=0){}
-			let jumptosecond = document.getElementById('jumptosecond');
-			jumptosecond.click();
-		}
-	}
 };
 </script>
 

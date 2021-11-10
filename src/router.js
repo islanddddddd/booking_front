@@ -19,7 +19,6 @@ import reserve from './views/reserve.vue'
 import officeMap from './components/officeMap.vue'
 import rcalendar from './components/rcalendar.vue'
 
-import testCal from './views/test/testCal.vue'
 
 
 const router = createRouter({
@@ -95,11 +94,6 @@ const router = createRouter({
 			path: "/rcalendar",
 			name: "rcalendar",
 			component: rcalendar
-		},
-		{
-			path: "/testCal",
-			name: "testCal",
-			component: testCal
 		},
 
 
