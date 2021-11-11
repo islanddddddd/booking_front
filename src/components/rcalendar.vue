@@ -1,7 +1,12 @@
 <template>
-  <!-- {{ msg }} -->
-  <!-- <vue-cal :time-from="msg.startTime * 60" :time-to="msg.endTime * 60" :special-hours="msg.specialHours" :disable-views="['years']" today-button :events="[events]" /> -->
-  <!-- <vue-cal :time-from="msg.startTime * 60" :time-to="msg.endTime * 60" :disable-views="['years']" today-button :events="[events]" @cell-dblclick="dbclick()" /> -->
+
+  <dl class="row text-capitalize">
+    <div class="row col-6" v-for="(item, index) in msg.facility">
+      <dt class="col-sm-3">{{ index }}</dt>
+      <dd class="col-sm-3">{{ item }}</dd>
+    </div>
+  </dl>
+
   <button class="btn btn-primary m-1" @click="changeUnit(0)">hour</button>
   <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>
   <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>

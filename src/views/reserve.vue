@@ -129,6 +129,15 @@
       </select>
     </div>
   </div>
+
+  <div class="row text-capitalize">
+    <div class="col-1 mb-1" v-for="(item, index) in facilityData">
+      <div class="btn btn-primary" style="width: 100%" :class="tableClassByTypeId[item.typeId-1]" data-bs-toggle="modal"
+           data-bs-target="#calendar" @click="select(index)">{{ index }}
+      </div>
+    </div>
+  </div>
+
   <table class="table table-striped table-hover caption-top align-middle text-center">
     <caption>List of Facility</caption>
     <thead class="table-light text-capitalize">
@@ -151,7 +160,6 @@
     </tr>
     </tbody>
   </table>
-  <button @click="setdataTitle">das</button>
 </template>
 
 <script>
@@ -184,19 +192,6 @@ export default {
       msg: {
         startTime: 7,
         endTime: 16,
-        // specialHours: {
-        //   1: dailyHours,
-        //   2: dailyHours,
-        //   3: [{from: 9 * 60, to: 12 * 60, class: 'business-hours'}, {
-        //     from: 14 * 60,
-        //     to: 18 * 60,
-        //     class: 'business-hours'
-        //   }],
-        //   4: dailyHours,
-        //   5: dailyHours
-        // },
-        // unit: 2,
-        // jump: 0
       },
       times: {startTime: '1', endTime: '1', jump: '0'},//日历组件传回的数据
       price: 0,//订单价格
@@ -206,6 +201,7 @@ export default {
   methods: {
     select(index) {
       this.selectedFacilityIndex = index;
+      this.msg['facility'] = this.facilityData[this.selectedFacilityIndex]
     },
     getTime(times) {
       console.log(times);
@@ -277,8 +273,12 @@ export default {
 
     },
     async getFacility() {
-      const res = await getFacility({"center_ID": this.offliceList[this.selectedOfficeIndex].center_ID});
-      if (res.status === 200) {
+      const center = this.offliceList[this.selectedOfficeIndex]
+      const centerID = center.centerId
+      // const res = await getFacility({"center_ID": this.offliceList[this.selectedOfficeIndex].center_ID});
+      const res = await getFacility({"center_ID": centerID});
+      // const res = await getFacility({"center_ID": 'sad'});
+      if (res.status == 200) {
         console.log(res.data)
         this.facilityData = res.data.data;
       } else alert('getFacility fail')
