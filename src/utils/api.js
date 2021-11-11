@@ -27,3 +27,6 @@ export const addPlan = data => http.post("/manage/add_plan/", data);
 export const addFacility = data => http.post("/manage/add_facility/", data);
 
 export const addOffice = data => http.post("/manage/add_office_location/", data);
+
+export const get_hour_ava = data => http.get("/manage/get_hour_ava/", data);
+export const get_day_ava = data => http.get("/manage/get_day_ava/", data);

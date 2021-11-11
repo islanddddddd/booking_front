@@ -15,22 +15,23 @@
       style="height: 25rem"
       :time-from="msg.startTime * 60"
       :time-to="msg.endTime * 60"
-      :disable-views="['years', 'day', 'year', 'month']"
+      active-view="week"
+      hide-view-selector
       :special-hours="specialHours"
       :dblclickToNavigate="false"
       today-button
-      :events="[events]"
-      @cell-click="logEvents('cell-click ', $event)"
+      :events="[]"
+      @cell-click="getHours('cell-click ', $event)"
   />
   <vue-cal
       v-else-if="unit == 1"
       style="height: 25rem"
       :time-from="msg.startTime * 60"
       :time-to="msg.endTime * 60"
-      :disable-views="['years', 'day', 'year', 'week']"
-      :special-hours="specialHours"
+      active-view="month"
+      hide-view-selector
       :dblclickToNavigate="false"
-      today-button
+      :disable-days=disable_days
       :events="[events]"
       @cell-click="getDay('cell-click ', $event)"
   />
@@ -39,7 +40,8 @@
       style="height: 25rem"
       :time-from="msg.startTime * 60"
       :time-to="msg.endTime * 60"
-      :disable-views="['years', 'day', 'year', 'week']"
+      active-view="month"
+      hide-view-selector
       :special-hours="specialHours"
       :dblclickToNavigate="false"
       today-button
@@ -51,6 +53,7 @@
 <script>
 import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css';
+import {get_hour_ava, get_day_ava} from "../utils/api";
 
 // `from` and `to` are expected in minutes.
 // const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' };
@@ -70,43 +73,134 @@ export default {
       class: 'badevents'
     },
     times: {},
-    specialHours: {},
+    // specialHours: {},
+    specialHours: {
+      3: [
+        {from: 9 * 60, to: 12 * 60, class: 'business-hours'},
+        {from: 14 * 60, to: 18 * 60, class: 'business-hours'},
+        {from: 18 * 60, to: 19 * 60, class: 'business-hours'},
+      ],
+    },
+    day_ava: 0,
+    disable_days: [],
+    hours_ava: undefined,
     unit: 0,
   }),
+  mounted() {
+    this.changeUnit(0)
+  },
   methods: {
-    changeUnit(unit) {
+    async changeUnit(unit) {
       this.unit = unit
+      if (unit == 1)
+        this.getSpecialHours_days(this.msg.facility.facility_id)
+      else if (unit == 0) {
+        let day_ava = new Date().getDay().toString()
+        this.getSpecialHours_hours(day_ava, this.msg.facility.facility_id)
+      }
     },
+    async getSpecialHours_hours(day_ava, facility_id) {
+      let data = {facility_id}
+      const res = await get_hour_ava(data);
+      let hours_ava = res.data.hours
+      this.hours_ava = hours_ava
+      console.log(hours_ava)
+      // if (hours_ava.length==1) {
+      //
+      // }
+
+      let specialHours = {}
+      for (let i = 0; i < hours_ava.length; i++) {
+        console.log('i:' + i + '循环')
+        let start = hours_ava[i]
+        console.log('start' + start)
+        let end = hours_ava[i]
+        console.log('end' + end)
+
+        let hour_ava_arr = []//每一天空闲数组
+        let hour_ava//每一段控线
+        let outside_j//传递j
+        console.log()
+        for (let j = i + 1; j < hours_ava.length + 1; j++) {
+          if (end + 1 == hours_ava[j]) {
+            end = hours_ava[i] + 1
+          }
+          // alert('J循环开始')
+          let specialHours_class = 'business-hours'
+          hour_ava = {from: start * 60, to: (end + 1) * 60, class: specialHours_class}
+          outside_j = j
+        }
+
+        hour_ava_arr.push(hour_ava)
+        // alert(hour_ava)
+        specialHours[day_ava] = hour_ava_arr
+        i = outside_j + 1
+      }
+      console.log(specialHours)
+      this.specialHours = specialHours
+
+    },
+    async getSpecialHours_days(facility_id) {
+      let data = {facility_id}
+      const res = await get_day_ava(data);
+      let days = res.data.days
+      let month_days = []
+      for (let i = 1; i < 31; i++) {
+        month_days[i - 1] = i
+      }
+      // console.log(month_days)
+      days = month_days.filter(function (v) {
+        return days.indexOf(v) == -1
+      })
+
+      let disable_days = []
+      let now_year = new Date().getFullYear()
+      let now_month = new Date().getMonth()
+      for (let i = 0; i < days.length; i++) {
+        let disable_day = new Date(now_year, now_month, days[i]).format();
+        disable_days.push(disable_day)
+      }
+      this.disable_days = disable_days
+      console.log('disable_days')
+      console.log(disable_days)
+    },
+
     onEventClick(event, e) {
       this.selectedEvent = event;
       this.showDialog = true;
 
       // Prevent navigating to narrower view (default vue-cal behavior).
       e.stopPropagation();
-    },
-    logEvents(s, e) {
-      // 这是弃用的,但还有点用
-      this.times.date = new Date(e).format('YYYY-MM-DD');
-      this.times.startTime = new Date(e).format('HH:00');
-      let addTime = e.setHours(e.getHours() + 1);
-      this.times.endTime = new Date(addTime).format('HH:00');
-
+    }
+    ,
+    backTimes(e) {
       this.times.unit = this.unit
       this.times.year = new Date(e).getFullYear()
-      this.times.month = new Date(e).getMonth()
+      this.times.month = new Date(e).getMonth() + 1
       this.times.days = new Date(e).getDate()
       this.times.hours = new Date(e).getHours()
+    }
+    ,
+    getHours(s, e) {
+      console.log('e:')
+      console.log(e)
+      if (this.hours_ava.indexOf(e.getHours()) == -1) console.log('选择的不是可用时间')
+      else {
+        // 这是弃用的,但还有点用
+        this.times.date = new Date(e).format('YYYY-MM-DD');
+        this.times.startTime = new Date(e).format('HH:00');
+        let addTime = e.setHours(e.getHours() + 1);
+        this.times.endTime = new Date(addTime).format('HH:00');
 
+        this.backTimes(e)
 
-      // this.specialHours.day={this.times.startTime*60}
-      // if(day==1){
-      // 	this.times.specialHours.=7
-      // }
-      this.$emit('childFn', this.times);
-      this.$emit('father-click');
-    },
-    getDay(s, e) {
+        this.$emit('childFn', this.times);
+        this.$emit('father-click');
+      }
 
+    }
+    ,
+    async getDay(s, e) {
       //旧的
       let startTime, endTime, time1, time2;
       time1 = this.$props.msg.startTime;
@@ -119,15 +213,13 @@ export default {
       this.times.endTime = new Date(addTime).format('YYYY-MM-DD-HH:00');
 
       //新的
-      this.times.unit = this.unit
-      this.times.year = new Date(e).getFullYear()
-      this.times.month = new Date(e).getMonth()
-      this.times.days = new Date(e).getDate()
-      this.times.hours = new Date(e).getHours()
+      this.backTimes(e)
+
 
       this.$emit('childFn', this.times);
       this.$emit('father-click');
-    },
+    }
+    ,
     getWeek(s, e) {
       //旧的
       let startTime, endTime, time1, time2;
@@ -145,18 +237,8 @@ export default {
       this.times.endTime = new Date(endTime).format('YYYY-MM-DD-HH:00');
 
       //新的
-      this.times.unit = this.unit
-      this.times.year = new Date(e).getFullYear()
-      this.times.month = new Date(e).getMonth()
-      this.times.days = new Date(e).getDate()
-      this.times.hours = new Date(e).getHours()
+      this.backTimes(e)
 
-
-      // this.specialHours.day={this.times.startTime*60}
-      // if(day==1){
-      // 	this.times.specialHours.=7
-      // }
-      // console.log(this.times);
       this.$emit('childFn', this.times);
       this.$emit('father-click');
     }
@@ -169,7 +251,9 @@ export default {
   background-color: rgba(255, 255, 0, 0.2);
   border: solid rgba(255, 210, 0, 0.6);
   border-width: 2px 0;
+  cursor: pointer; /*鼠标变小手*/
 }
+
 
 .badevents {
   background-color: red;

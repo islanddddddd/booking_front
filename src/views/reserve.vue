@@ -8,7 +8,7 @@
   </div> -->
 
   <!-- 模态框 -->
-  <div class="modal fade" id="calendar">
+  <div class="modal fade" id="calendar" v-if="this.msg.facility!=undefined">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
       <div class="modal-content">
         <!-- 模态框头部 -->
@@ -79,7 +79,7 @@
               </div>
               <div class="col">
                 <div class="form-floating">
-                  <input type="text" class="form-control" v-model="times.startTime" readonly="readonly"/>
+                  <input type="text" class="form-control" v-model="times.endTime" readonly="readonly"/>
                   <label>End</label>
                 </div>
               </div>
@@ -134,7 +134,7 @@
     <div class="col-1 mb-1" v-for="(item, index) in facilityData">
       <div class="btn btn-primary" style="width: 100%" :class="tableClassByTypeId[item.typeId-1]" data-bs-toggle="modal"
            data-bs-target="#calendar" @click="select(index)">
-<!--        {{ index }}-->
+        <!--        {{ index }}-->
         {{ item.id }}
       </div>
     </div>
@@ -169,7 +169,7 @@ import Cookies from 'js-cookie'
 
 import Sidebar from '../components/sidebar.vue';
 import rcalendar from '../components/rcalendar.vue';
-import {addReserve, getFacility, getOffice} from "../utils/api";
+import {addReserve, getFacility, getOffice, get_hour_ava, get_day_ava} from "../utils/api";
 
 const dailyHours = {from: 1 * 60, to: 5 * 60, class: 'business-hours'};
 export default {
@@ -180,7 +180,7 @@ export default {
   emits: ['childFn'],
   data() {
     return {
-      tableClassByTypeId: [ 'bg-secondary','bg-primary', 'bg-info','bg-success','bg-warning',  'bg-danger', ],
+      tableClassByTypeId: ['bg-secondary', 'bg-primary', 'bg-info', 'bg-success', 'bg-warning', 'bg-danger',],
       activeClass: 'active',
       errorClass: 'text-danger',
       selectedOfficeIndex: 0,
@@ -192,8 +192,8 @@ export default {
       selectedFacilityIndex: 0,
       facilityData: [],
       msg: {
-        startTime: 7,
-        endTime: 16,
+        startTime: 0,
+        endTime: 24,
       },
       times: {startTime: '1', endTime: '1', jump: '0'},//日历组件传回的数据
       price: 0,//订单价格
@@ -204,7 +204,30 @@ export default {
     select(index) {
       this.selectedFacilityIndex = index;
       this.msg['facility'] = this.facilityData[this.selectedFacilityIndex]
+
+      // const facility_id = this.facilityData[this.selectedFacilityIndex].facility_id
+      // alert(facility_id)
+      // this.getSpecialHours_hours(facility_id)
+      // this.getSpecialHours_days(facility_id)
+      // console.log(this.msg)
     },
+    async getSpecialHours_hours(facility_id) {
+      console.log(facility_id)
+
+      let data = facility_id
+      const res = await get_hour_ava(data);
+      console.log(res)
+
+    },
+    async getSpecialHours_days(facility_id) {
+      console.log(facility_id)
+      // let data = facility_id
+      let data = {facility_id: facility_id}
+      const res = await get_day_ava(data);
+      console.log(res)
+
+    },
+
     getTime(times) {
       console.log(times);
       this.times = times;
@@ -241,7 +264,7 @@ export default {
     },
     async confirmBtn() {
       const fa = this.facilityData[this.selectedFacilityIndex];
-      console.log('fa:')
+      console.log(' confirm facility:')
       console.log(fa)
       let data;
       if (this.isAdmin) {
@@ -250,8 +273,8 @@ export default {
         data = this.getDataAddByUser(fa);
       }
       const res = await addReserve(data);
-      // if (res.status === 200) alert('add success')
-      // else alert('add fail')
+      console.log('confrim data:')
+      console.log(data)
       if (res.data.status == 'failed, no access') alert('add faill')
       else alert('add success')
     },
@@ -284,8 +307,8 @@ export default {
         console.log(res.data)
         this.facilityData = res.data.data;
 
-        function sortId(a,b) {
-          return a.typeId-b.typeId
+        function sortId(a, b) {
+          return a.typeId - b.typeId
         }
 
         this.facilityData = this.facilityData.sort(sortId)
