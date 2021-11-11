@@ -96,7 +96,7 @@
               <input
                   type="text"
                   class="form-control"
-                  placeholder="Password"
+                  placeholder="Tel"
                   v-model="modifyTable.tel"
               />
               <label for="floatingPassword">Tel</label>
@@ -106,20 +106,20 @@
               <input
                   type="text"
                   class="form-control"
-                  placeholder="Password"
+                  placeholder="Address"
                   v-model="modifyTable.address"
               />
               <label for="floatingPassword">Address</label>
             </div>
-            <div class="form-floating">
-              <input
-                  type="email"
-                  class="form-control"
-                  placeholder="Password"
-                  v-model="modifyTable.email"
-              />
-              <label for="floatingPassword">Email</label>
-            </div>
+<!--            <div class="form-floating">-->
+<!--              <input-->
+<!--                  type="email"-->
+<!--                  class="form-control"-->
+<!--                  placeholder="Password"-->
+<!--                  v-model="modifyTable.email"-->
+<!--              />-->
+<!--              <label for="floatingPassword">Email</label>-->
+<!--            </div>-->
 
 
             <button
@@ -142,6 +142,8 @@
 </template>
 
 <script>
+import {updateUser} from "../../utils/api";
+
 export default {
 	data() {
 		return {
@@ -179,6 +181,13 @@ export default {
 		};
 	},
 	methods: {
+    async onSubmit() {
+      console.log(this.modifyTable.gender);
+      const res = await updateUser(this.modifyTable);
+      if (res.status === 200) {
+        console.log("update success")
+      }
+    },
 		deleteUser(userid) {
 			alert(userid);
 		},

@@ -17,3 +17,13 @@ export const getFacility = data => http.get("/manage/get_facility/", data);
 export const addReserve = data => http.post("/manage/add_reserve/", data);
 
 export const buyPlan = data => http.post("/manage/buy_plan/");
+
+export const updateUser = data => http.post("/manage/update_user_info/", data);
+
+export const getFacilityType = () => http.get("/manage/get_facility_type/")
+
+export const addPlan = data => http.post("/manage/add_plan/", data);
+
+export const addFacility = data => http.post("/manage/add_facility/", data);
+
+export const addOffice = data => http.post("/manage/add_office_location/", data);
