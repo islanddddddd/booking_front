@@ -39,8 +39,9 @@ import Cookies from 'js-cookie'
 
 
 export default {
-  mounted() {
+  created() {
     this.init()
+    this.changeIt()
   },
   update() {
     this.init()
@@ -66,9 +67,18 @@ export default {
     };
   },
   methods: {
-    changeIt(index) {
+    changeIt() {
       // alert(index);
-      this.currentIndex = index;
+      // this.currentIndex = index;
+      // console.log(this.$route.path)
+      let currentIndex = this.$route.path
+      currentIndex = currentIndex.split("/")[1]
+      for (const i in this.adminLinks) {
+        console.log(this.adminLinks[i])
+        if (currentIndex == this.adminLinks[i]) this.currentIndex = i
+      }
+      // this.currentIndex = currentIndex
+      // console.log(currentIndex)
     },
     signOut() {
       alert('signOut')
