@@ -16,7 +16,7 @@
           <form class="">
             <div class="form-floating mb-3">
               <input
-                  type="email"
+                  type="text"
                   class="form-control rounded-4"
                   id="floatingInput"
                   placeholder="name@example.com"
