@@ -32,7 +32,6 @@
       hide-view-selector
       :dblclickToNavigate="false"
       :disable-days=disable_days
-      :events="[events]"
       @cell-click="getDay('cell-click ', $event)"
   />
   <vue-cal
@@ -45,7 +44,6 @@
       :special-hours="specialHours"
       :dblclickToNavigate="false"
       today-button
-      :events="[events]"
       @cell-click="getWeek('cell-click ', $event)"
   />
 </template>
