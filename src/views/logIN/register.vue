@@ -136,37 +136,16 @@ export default {
       this.check();
 
       if (this.checked === true) {
-        // var formData = new FormData();
-        // console.log(this.formMess["tel"])
-        // for(var key in this.formMess){
-        //   console.log(key);
-        //   formData.append(key,this.formMess[key]);
-        // }
-        // console.log(formData);
+
         var formData = JSON.stringify(this.formMess); // 这里才是你的表单数据
 
         const res = await userRegister(this.formMess);
-        if (res.status === 200) {
-          alert('register was successful')
+        if (res.data.status =='success') {
+          alert('register was successful,Please log in')
           await this.$router.push('/login')
         }
-        // console.log(formData);
-        // console.log("-----------------");
-        //
-        // axios({
-        //   method: "post",
-        //   url: " http://127.0.0.1:8000/user/register/",
-        //   headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        //   withCredentials: true,
-        //   data: formData,
-        // }).then((res) => {
-        //   console.log(res);
-        // });
-        // // 接着写登陆逻辑
       } else {
-        alert("请输入正确的表单");
+        alert("Please fill in the correct information");
       }
     },
     check() {

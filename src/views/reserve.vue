@@ -35,25 +35,80 @@
     </div>
   </div>
   <!-- 二级模态框 -->
-  <div class="modal fade" id="times" aria-hidden="true" aria-labelledby="times" tabindex="-1">
+  <div class="modal fade" id="times" aria-hidden="true" aria-labelledby="times" tabindex="-1"
+       v-if="facilityData.length!=0">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalToggleLabel2">Confirm</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+
         <div class="modal-body">
-          <div>
+          <div class="container-fluid" style="padding: 0">
             <h4>{{ times.date }}</h4>
-            <div class="form-floating">
-              <input type="text" class="form-control" v-model="times.startTime" readonly="readonly"/>
-              <label>开始时间</label>
+            <div class="row g-2">
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="facilityData[selectedFacilityIndex].centerId"
+                         readonly="readonly"/>
+                  <label>Center ID</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="facilityData[selectedFacilityIndex].facility_id"
+                         readonly="readonly"/>
+                  <label>Facility Id</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="facilityData[selectedFacilityIndex].typeId"
+                         readonly="readonly"/>
+                  <label>TypeID</label>
+                </div>
+              </div>
             </div>
-            <div class="form-floating">
-              <input type="text" class="form-control" v-model="times.endTime" readonly="readonly"/>
-              <label>结束时间</label>
+            <div class="row g-2">
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="times.startTime" readonly="readonly"/>
+                  <label>Start</label>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="times.startTime" readonly="readonly"/>
+                  <label>End</label>
+                </div>
+              </div>
             </div>
-            <!-- <button class="btn btn-primary" data-bs-target="#times" data-bs-toggle="modal">Open second modal</button> -->
+            <div class="row g-2">
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="aUserId" v-if="isAdmin"/>
+                  <input type="text" class="form-control" v-model="aUserId" readonly="readonly" v-else/>
+                  <label>User Id</label>
+                </div>
+              </div>
+              <div class="col" v-if="isAdmin">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="operater_id"/>
+                  <label>Operater Id</label>
+                </div>
+              </div>
+
+            </div>
+            <!--            <div class="row g-2">-->
+            <!--              <div class="col">-->
+            <!--                <div class="form-floating">-->
+            <!--                  <input type="text" class="form-control" v-model="price" readonly="readonly"/>-->
+            <!--                  <label>Price</label>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+
 
           </div>
         </div>
@@ -69,10 +124,9 @@
   <div class="container-fluid text-center " style="padding: 0.9375rem;">
     <div class="row col-6">
       <div class="col-2 align-self-center">Office</div>
-      <select class="form-select col" v-model="selectedOffice" aria-label="Default select example">
-        <option v-for="item in offliceList" :value="item.centerId">{{ item.district }}</option>
+      <select class="form-select col" v-model="selectedOfficeIndex" aria-label="Default select example">
+        <option v-for="(item,index) in offliceList" :value="index">{{ item.district }}</option>
       </select>
-      <!-- <button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Select</button> -->
     </div>
   </div>
   <table class="table table-striped table-hover caption-top align-middle text-center">
@@ -82,24 +136,12 @@
       <th scope="col" v-for="(item, index) in dataTitle">{{ item }}</th>
     </tr>
     </thead>
-    <!--    <tbody>-->
-    <!--    <tr v-for="(item, index) in data" :class="tableClassByTypeId[item.typeId-1]">-->
-    <!--      <th>{{ index }}</th>-->
-    <!--      <td v-for="(item, index) in item">{{ item }}</td>-->
-    <!--      <td>-->
-    <!--        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar"-->
-    <!--                @click="select(index)">select-->
-    <!--        </button>-->
-    <!--      </td>-->
-    <!--    </tr>-->
-    <!--    </tbody>-->
     <tbody>
     <tr v-for="(item, index) in facilityData" :class="tableClassByTypeId[item.typeId-1]">
-      <th>{{ index }}</th>
-      <!--				<td v-for="(item, index) in item">{{ item }}</td>-->
+      <th> {{ item.id }}</th>
       <td> {{ item.facility_id }}</td>
-      <td> {{ item.number }}</td>
       <td> {{ item.centerId }}</td>
+      <td> {{ item.number }}</td>
       <td> {{ item.typeId }}</td>
       <td>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#calendar"
@@ -109,6 +151,7 @@
     </tr>
     </tbody>
   </table>
+  <button @click="setdataTitle">das</button>
 </template>
 
 <script>
@@ -130,154 +173,89 @@ export default {
       tableClassByTypeId: ['bg-warning', 'bg-success', 'bg-info', 'bg-danger', 'bg-primary', 'bg-secondary',],
       activeClass: 'active',
       errorClass: 'text-danger',
-      selectedOffice: '',
+      selectedOfficeIndex: 0,
       isAdmin: Cookies.get("admin") === "true",   /*是不是管理员*/
       aUserId: '',
       offliceList: ['office1', 'office2', 'office3'], //办公室列表
-      dataTitle: ['FacilityId', 'Number', 'CenterId', 'TypeId'], //控制表格的表头
-      selectedFacilityIndex: '',
+      // dataTitle: ['centerId', 'facility_id', 'id', 'number', 'typeID'], //控制表格的表头
+      dataTitle: ['id', 'facility_id', 'centerId', 'number', 'typeID'], //控制表格的表头
+      selectedFacilityIndex: 0,
       facilityData: [],
-      data: {
-        //座位数数据
-        '1': {
-          FacilityType: 'FacilityType_1',
-          FacilityPrice: '10$/mo',
-          startTime: 3,
-          endTime: 15,
-          specialHours: {
-            1: dailyHours,
-            2: dailyHours,
-            3: [{from: 9 * 60, to: 12 * 60, class: 'business-hours'}, {
-              from: 14 * 60,
-              to: 18 * 60,
-              class: 'business-hours'
-            }],
-            4: dailyHours,
-            5: dailyHours
-          },
-          unit: 0,
-          typeId: 1,
-        },
-        '2': {
-          FacilityType: 'FacilityType_2',
-          FacilityPrice: '20$/mo',
-          startTime: 3,
-          endTime: 15,
-          specialHours: {
-            1: dailyHours,
-            2: dailyHours,
-            3: [{from: 9 * 60, to: 12 * 60, class: 'business-hours'}, {
-              from: 14 * 60,
-              to: 18 * 60,
-              class: 'business-hours'
-            }],
-            4: dailyHours,
-            5: dailyHours
-          },
-          unit: 1,
-          typeId: 2,
-
-        },
-        '3': {
-          FacilityType: 'FacilityType_3',
-          FacilityPrice: '30$/mo',
-          startTime: 3,
-          endTime: 15,
-          specialHours: {
-            1: dailyHours,
-            2: dailyHours,
-            3: [{from: 9 * 60, to: 12 * 60, class: 'business-hours'}, {
-              from: 14 * 60,
-              to: 18 * 60,
-              class: 'business-hours'
-            }],
-            4: dailyHours,
-            5: dailyHours
-          },
-          unit: 2,
-          typeId: 3,
-
-        }
-      },
       msg: {
-        startTime: 3,
-        endTime: 15,
-        specialHours: {
-          1: dailyHours,
-          2: dailyHours,
-          3: [{from: 9 * 60, to: 12 * 60, class: 'business-hours'}, {
-            from: 14 * 60,
-            to: 18 * 60,
-            class: 'business-hours'
-          }],
-          4: dailyHours,
-          5: dailyHours
-        },
-        unit: 2,
-        jump: 0
+        startTime: 7,
+        endTime: 16,
+        // specialHours: {
+        //   1: dailyHours,
+        //   2: dailyHours,
+        //   3: [{from: 9 * 60, to: 12 * 60, class: 'business-hours'}, {
+        //     from: 14 * 60,
+        //     to: 18 * 60,
+        //     class: 'business-hours'
+        //   }],
+        //   4: dailyHours,
+        //   5: dailyHours
+        // },
+        // unit: 2,
+        // jump: 0
       },
-      times: {startTime: '1', endTime: '1', jump: '0'} //日历组件传回的数据
+      times: {startTime: '1', endTime: '1', jump: '0'},//日历组件传回的数据
+      price: 0,//订单价格
+      operater_id: ''
     };
   },
   methods: {
     select(index) {
-      let dataIndexms = this.data[index];
-      this.msg = dataIndexms;
       this.selectedFacilityIndex = index;
-      console.log(dataIndexms);
-    },
-    deleteUser(userid) {
-      alert(userid);
-    },
-    modifyUser(userid) {
-      alert(userid);
     },
     getTime(times) {
       console.log(times);
       this.times = times;
     },
 
-    getDataAddByAdmin() {
-      const fa = this.data[this.selectedFacilityIndex];
+    getDataAddByAdmin(fa) {
+      // const fa = this.data[this.selectedFacilityIndex];
       return {
         facility_id: fa.facility_id,
         typeId: fa.typeId,
-        unit: fa.unit,
+        unit: this.times.unit,
         userId: this.aUserId,
         year: this.times.year,
-        month: this.month,
-        days: this.days,
-        hours: this.hours,
-        operater_id: Cookies.get('userId'),
+        month: this.times.month,
+        days: this.times.days,
+        hours: this.times.hours,
+        operater_id: this.operater_id,
       };
     },
 
-    getDataAddByUser() {
-      const fa = this.data[this.selectedFacilityIndex];
+    getDataAddByUser(fa) {
+      // const fa = this.data[this.selectedFacilityIndex];
       return {
         facility_id: fa.facility_id,
         typeId: fa.typeId,
-        unit: fa.unit,
-        userId: Cookies.get('userId'),
+        unit: this.times.unit,
+        userId: this.aUserId,
         year: this.times.year,
-        month: this.month,
-        days: this.days,
-        hours: this.hours,
-        operater_id: '',
+        month: this.times.month,
+        days: this.times.days,
+        hours: this.times.hours,
+        operater_id: this.aUserId,
       };
     },
     async confirmBtn() {
-      const fa = this.data[this.selectedFacilityIndex];
+      const fa = this.facilityData[this.selectedFacilityIndex];
+      console.log('fa:')
+      console.log(fa)
       let data;
       if (this.isAdmin) {
-        data = this.getDataAddByAdmin();
+        data = this.getDataAddByAdmin(fa);
       } else {
-        data = this.getDataAddByUser();
+        data = this.getDataAddByUser(fa);
       }
       const res = await addReserve(data);
-      if (res.status === 200) {
-        console.log("add success");
-      }
+      // if (res.status === 200) alert('add success')
+      // else alert('add fail')
+      if (res.data.status == 'failed, no access') alert('add faill')
+      else alert('add success')
     },
     fatherClick() {
       let jumptosecond = document.getElementById('jumptosecond');
@@ -290,22 +268,28 @@ export default {
         this.offliceList = [];
         console.log(data);
         this.offliceList = data;
-      }
+      } else alert('getFacility fail')
+
+      //  设置userid，operater_id
+      if (!this.isAdmin) this.aUserId = Cookies.get("userId")
+      else this.operater_id = Cookies.get("userId")
+
+
     },
     async getFacility() {
-      const res = await getFacility({"center_ID": this.selectedOffice});
+      const res = await getFacility({"center_ID": this.offliceList[this.selectedOfficeIndex].center_ID});
       if (res.status === 200) {
         console.log(res.data)
         this.facilityData = res.data.data;
-      }
+      } else alert('getFacility fail')
     }
   },
 
-  created() {
+  mounted() {
     this.initData();
   },
   watch: {
-    selectedOffice: function (newV, oldV) {
+    selectedOfficeIndex: function (newV, oldV) {
       console.log("changed!!")
       this.getFacility();
     }
@@ -313,4 +297,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>
