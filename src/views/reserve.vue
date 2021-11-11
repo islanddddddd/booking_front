@@ -133,7 +133,9 @@
   <div class="row text-capitalize">
     <div class="col-1 mb-1" v-for="(item, index) in facilityData">
       <div class="btn btn-primary" style="width: 100%" :class="tableClassByTypeId[item.typeId-1]" data-bs-toggle="modal"
-           data-bs-target="#calendar" @click="select(index)">{{ index }}
+           data-bs-target="#calendar" @click="select(index)">
+<!--        {{ index }}-->
+        {{ item.id }}
       </div>
     </div>
   </div>
@@ -178,7 +180,7 @@ export default {
   emits: ['childFn'],
   data() {
     return {
-      tableClassByTypeId: ['bg-warning', 'bg-success', 'bg-info', 'bg-danger', 'bg-primary', 'bg-secondary',],
+      tableClassByTypeId: [ 'bg-secondary','bg-primary', 'bg-info','bg-success','bg-warning',  'bg-danger', ],
       activeClass: 'active',
       errorClass: 'text-danger',
       selectedOfficeIndex: 0,
@@ -281,6 +283,12 @@ export default {
       if (res.status == 200) {
         console.log(res.data)
         this.facilityData = res.data.data;
+
+        function sortId(a,b) {
+          return a.typeId-b.typeId
+        }
+
+        this.facilityData = this.facilityData.sort(sortId)
       } else alert('getFacility fail')
     }
   },
