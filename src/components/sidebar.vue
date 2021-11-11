@@ -55,14 +55,14 @@ export default {
         Reserve: 'reserve',
       },
       adminLinks: {
-        AdminHome: 'adminHome',
+        Home: 'profile',
         UserManagement: 'userManagement',
         OrderManagement: 'order',
         PlanManagement: 'planManagement',
         FacilityManagement: 'facilityManagement',
         Reserve: 'reserve',
       },
-      currentIndex: 'AdminHome'
+      currentIndex: 'Home'
     };
   },
   methods: {

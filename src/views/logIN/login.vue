@@ -73,12 +73,12 @@ export default {
           console.log(user);
           Cookies.set("userId", user.userId);
           Cookies.set("admin", user.admin);
-          if (res.data.isAdmin) {
-            await this.$router.push('/adminHome')
-          } else {
-            await this.$router.push('/profile')
-          }
-        }else alert('Login failed!')
+          Cookies.set("user", JSON.stringify(user));
+          console.log(Cookies.get('user'))
+          // console.log(res.data)
+          await this.$router.push('/profile')
+
+        } else alert('Login failed!')
       }
       // alert('登录');
     },

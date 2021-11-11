@@ -5,14 +5,12 @@ import {
 import Login from "./views/logIN/login.vue"
 import Register from "./views/logIN/register.vue"
 import Home from "./views/home.vue"
-import Sidebar from "./components/sidebar.vue"
 import profile from './views/Profile.vue'
 import ShowPlan from './views/plan/showPlan.vue'
 import BuyPlan from './views/plan/buyPlan.vue'
 import UserManagement from './views/admin/userManagement.vue'
 import order from './views/order.vue'
 import Header from './components/header.vue'
-import adminhome from './views/admin/adminHome.vue'
 import planManagement from './views/admin/planManagement.vue'
 import facilityManagement from './views/admin/facilityManagement.vue'
 import reserve from './views/reserve.vue'
@@ -47,11 +45,7 @@ const router = createRouter({
                 path: "/userManagement",
                 name: "userManagement",
                 component: UserManagement
-            }, {
-                path: "/adminHome",
-                name: "adminHome",
-                component: adminhome
-            }, {
+            },  {
                 path: "/planManagement",
                 name: "planManagement",
                 component: planManagement
@@ -72,7 +66,7 @@ const router = createRouter({
                 path: "/order",
                 name: "order",
                 component: order
-            },]
+            }]
         },
         {
             path: "/showPlan",
