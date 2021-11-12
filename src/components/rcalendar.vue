@@ -234,10 +234,8 @@ export default {
       // this.times.days = []
       let days = []
       let startdate = new Date(e).getDate()
-
       let disable_days_date = []
       console.log(this.disable_days)
-
       for (const disableDaysDateKey in this.disable_days) {
         disable_days_date.push(new Date(this.disable_days[disableDaysDateKey]).getDate())
       }
@@ -247,8 +245,12 @@ export default {
         if (disable_days_date.indexOf(startdate + i) === -1)
           days.push(startdate + i)
       }
-      this.times.days = days
-      alert(days)
+      // this.times.days = days
+      this.times.days = JSON.stringify(days);
+      // alert(days)
+      // let res = JSON.stringify(days);
+      // alert(res);
+
 
       // alert(startdate)
 
