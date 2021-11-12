@@ -258,21 +258,13 @@ export default {
     },
     async confirmBtn() {
       const fa = this.facilityData[this.selectedFacilityIndex];
-      console.log(' confirm facility:')
-      console.log(fa)
       let data;
       if (this.isAdmin) {
         data = this.getDataAddByAdmin(fa);
       } else {
         data = this.getDataAddByUser(fa);
       }
-      console.log('预约data：')
-      console.log(data)
       const res = await addReserve(data);
-      console.log('confrim data:')
-      console.log(data)
-      console.log(data.days)
-      console.log(typeof data.days)
       if (res.data.status == 'failed, no access') alert('add faill')
       else alert('add success')
       // location.reload()
