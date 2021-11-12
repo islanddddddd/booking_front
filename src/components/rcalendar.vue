@@ -77,28 +77,34 @@ export default {
     hours_ava: undefined,
     unit: 0,
   }),
-  mounted() {
-    this.changeUnit(0)
-  },
+  // mounted() {
+  //   this.changeUnit(0)
+  // },
   methods: {
-    async changeUnit(unit) {
+    async changeUnit(unit, facility_id) {
+      console.log('changeUnit')
       this.unit = unit
       if (unit == 1)
         await this.getSpecialHours_days(this.msg.facility.facility_id)
       else if (unit == 0) {
-        let day_ava = new Date().getDay().toString()
-        await this.getSpecialHours_hours(day_ava, this.msg.facility.facility_id)
+        console.log('getSpecialHours_hours')
+        let day = new Date().getDay()
+        let date = new Date().getDate()
+        for (let i = day, add = 0; i < 8; i++, add++) {
+          await this.getSpecialHours_hours(date + add, i.toString(), this.msg.facility.facility_id)
+          // await this.getSpecialHours_hours(date + add, i.toString(), facility_id)
+        }
       } else if (unit == 1) {
         await this.getSpecialHours_days(this.msg.facility.facility_id)
 
       }
     },
-    async getSpecialHours_hours(day_ava, facility_id) {
-      let data = {facility_id}
+    async getSpecialHours_hours(date, day, facility_id) {
+      //几号，周几，id
+      let data = {facility_id, 'day': date}
       const res = await get_hour_ava(data);
       let hours_ava = res.data.hours
       this.hours_ava = hours_ava
-      // console.log(hours_ava)
 
       let specialHours = {}
       let hour_ava_arr = []//每一天空闲数组
@@ -108,9 +114,9 @@ export default {
       for (let i = 0; i < hours_ava.length; i++) {
         start = hours_ava[i]
         end = hours_ava[i]
-        console.log('i:' + i)
+        // console.log('i:' + i)
         for (let j = i + 1; j < hours_ava.length + 1; j++) {
-          console.log(j)
+          // console.log(j)
           if (end + 1 == hours_ava[j]) {
             end = hours_ava[j]
           } else {
@@ -119,15 +125,15 @@ export default {
           }
         }
         hour_ava = {from: start * 60, to: (end + 1) * 60, class: specialHours_class}
-
         hour_ava_arr.push(hour_ava)
         i = outside_j - 1
-
       }
-      specialHours[day_ava] = hour_ava_arr
+      specialHours[day] = hour_ava_arr
 
       // console.log(specialHours)
-      this.specialHours = specialHours
+      // this.specialHours = specialHours
+      this.specialHours[day] = hour_ava_arr
+
 
     },
     async getSpecialHours_days(facility_id) {
@@ -168,13 +174,12 @@ export default {
       this.times.year = new Date(e).getFullYear()
       this.times.month = new Date(e).getMonth() + 1
       this.times.days = new Date(e).getDate()
-      this.times.hours = new Date(e).getHours()
-    }
-    ,
+      this.times.hours = new Date(e).getHours() - 1
+    },
     getHours(s, e) {
       console.log('e:')
       console.log(e)
-      if (this.hours_ava.indexOf(e.getHours()) == -1) console.log('选择的不是可用时间')
+      if (this.hours_ava.indexOf(e.getHours() - 1) == -1) console.log('选择的不是可用时间')
       else {
         // 这是弃用的,但还有点用
         this.times.date = new Date(e).format('YYYY-MM-DD');

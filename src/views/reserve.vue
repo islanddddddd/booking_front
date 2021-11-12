@@ -1,14 +1,8 @@
 <template>
   <h1>Reserve</h1>
-  <!-- <rcalendar></rcalendar> -->
-  <!-- <rc></rc> -->
-  <!-- 	<div>
-    <router-link :to="{ name: 'officeMap' }">routerlink</router-link>
-    <router-view></router-view>
-  </div> -->
-
   <!-- 模态框 -->
-  <div class="modal fade" id="calendar" v-if="this.msg.facility!=undefined">
+  <!--  <div class="modal fade" id="calendar" v-if="this.msg.facility!=undefined">-->
+  <div class="modal fade" id="calendar">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
       <div class="modal-content">
         <!-- 模态框头部 -->
@@ -20,7 +14,7 @@
         <!-- 模态框内容 -->
         <div class="modal-body">
           <div>
-            <rcalendar :msg="msg" @father-click="fatherClick" @childFn="getTime"></rcalendar>
+            <rcalendar :msg="msg" @father-click="fatherClick" @childFn="getTime" ref="rcalendar"></rcalendar>
           </div>
         </div>
 
@@ -132,13 +126,17 @@
 
   <div class="row text-capitalize">
     <div class="col-1 mb-1" v-for="(item, index) in facilityData">
+      <!--      <div> typeId: {{ item.typeId }}</div>-->
+      <!--      <div>{{ tableClassByTypeId[item.typeId - 1] }}</div>-->
+
       <div class="btn btn-primary" style="width: 100%" :class="tableClassByTypeId[item.typeId-1]" data-bs-toggle="modal"
            data-bs-target="#calendar" @click="select(index)">
-        <!--        {{ index }}-->
         {{ item.id }}
       </div>
+
     </div>
   </div>
+
 
   <table class="table table-striped table-hover caption-top align-middle text-center">
     <caption>List of Facility</caption>
@@ -170,6 +168,7 @@ import Cookies from 'js-cookie'
 import Sidebar from '../components/sidebar.vue';
 import rcalendar from '../components/rcalendar.vue';
 import {addReserve, getFacility, getOffice, get_hour_ava, get_day_ava} from "../utils/api";
+
 
 const dailyHours = {from: 1 * 60, to: 5 * 60, class: 'business-hours'};
 export default {
@@ -204,12 +203,7 @@ export default {
     select(index) {
       this.selectedFacilityIndex = index;
       this.msg['facility'] = this.facilityData[this.selectedFacilityIndex]
-
-      // const facility_id = this.facilityData[this.selectedFacilityIndex].facility_id
-      // alert(facility_id)
-      // this.getSpecialHours_hours(facility_id)
-      // this.getSpecialHours_days(facility_id)
-      // console.log(this.msg)
+      this.$refs.rcalendar.changeUnit(0)
     },
     async getSpecialHours_hours(facility_id) {
       console.log(facility_id)
@@ -277,6 +271,9 @@ export default {
       console.log(data)
       if (res.data.status == 'failed, no access') alert('add faill')
       else alert('add success')
+      location.reload()
+      //  这里可以跳出一个窗口用以显示已预约的订单信息
+
     },
     fatherClick() {
       let jumptosecond = document.getElementById('jumptosecond');
