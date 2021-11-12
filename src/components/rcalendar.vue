@@ -252,14 +252,16 @@ export default {
       time2 = this.$props.msg.endTime;
       this.times.date = new Date(e).format("YYYY-MM-DD");
       startTime = e.setHours(time1);
-      startTime = new Date(startTime).format("YYYY-MM-DD-HH");
+      startTime = new Date(startTime).format("YYYY-MM-DD");
       this.times.startTime = startTime;
+
       let addTime = new Date(e);
+      // endTime = addTime.setDate(addTime.getDate() + 7);
       endTime = addTime.setDate(addTime.getDate() + 7);
-      endTime = addTime.setHours(time2);
-      endTime = new Date(endTime).setHours(time2);
+      // endTime = addTime.setHours(time2);
+      // endTime = new Date(endTime).setHours(time2);
       this.times.endTime = new Date(endTime).format(
-          "YYYY-MM-DD-HH:00"
+          "YYYY-MM-DD"
       );
 
       //新的
