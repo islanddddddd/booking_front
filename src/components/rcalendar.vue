@@ -71,14 +71,7 @@ export default {
       class: 'badevents'
     },
     times: {},
-    // specialHours: {},
-    specialHours: {
-      3: [
-        {from: 9 * 60, to: 12 * 60, class: 'business-hours'},
-        {from: 14 * 60, to: 18 * 60, class: 'business-hours'},
-        {from: 18 * 60, to: 19 * 60, class: 'business-hours'},
-      ],
-    },
+    specialHours: {},
     day_ava: 0,
     disable_days: [],
     hours_ava: undefined,
@@ -91,10 +84,13 @@ export default {
     async changeUnit(unit) {
       this.unit = unit
       if (unit == 1)
-        this.getSpecialHours_days(this.msg.facility.facility_id)
+        await this.getSpecialHours_days(this.msg.facility.facility_id)
       else if (unit == 0) {
         let day_ava = new Date().getDay().toString()
-        this.getSpecialHours_hours(day_ava, this.msg.facility.facility_id)
+        await this.getSpecialHours_hours(day_ava, this.msg.facility.facility_id)
+      } else if (unit == 1) {
+        await this.getSpecialHours_days(this.msg.facility.facility_id)
+
       }
     },
     async getSpecialHours_hours(day_ava, facility_id) {
@@ -102,39 +98,35 @@ export default {
       const res = await get_hour_ava(data);
       let hours_ava = res.data.hours
       this.hours_ava = hours_ava
-      console.log(hours_ava)
-      // if (hours_ava.length==1) {
-      //
-      // }
+      // console.log(hours_ava)
 
       let specialHours = {}
-      for (let i = 0; i < hours_ava.length; i++) {
-        console.log('i:' + i + '循环')
-        let start = hours_ava[i]
-        console.log('start' + start)
-        let end = hours_ava[i]
-        console.log('end' + end)
+      let hour_ava_arr = []//每一天空闲数组
+      let start, end, hour_ava, outside_j
+      let specialHours_class = 'business-hours'
 
-        let hour_ava_arr = []//每一天空闲数组
-        let hour_ava//每一段控线
-        let outside_j//传递j
-        console.log()
+      for (let i = 0; i < hours_ava.length; i++) {
+        start = hours_ava[i]
+        end = hours_ava[i]
+        console.log('i:' + i)
         for (let j = i + 1; j < hours_ava.length + 1; j++) {
+          console.log(j)
           if (end + 1 == hours_ava[j]) {
-            end = hours_ava[i] + 1
+            end = hours_ava[j]
+          } else {
+            outside_j = j
+            break
           }
-          // alert('J循环开始')
-          let specialHours_class = 'business-hours'
-          hour_ava = {from: start * 60, to: (end + 1) * 60, class: specialHours_class}
-          outside_j = j
         }
+        hour_ava = {from: start * 60, to: (end + 1) * 60, class: specialHours_class}
 
         hour_ava_arr.push(hour_ava)
-        // alert(hour_ava)
-        specialHours[day_ava] = hour_ava_arr
-        i = outside_j + 1
+        i = outside_j - 1
+
       }
-      console.log(specialHours)
+      specialHours[day_ava] = hour_ava_arr
+
+      // console.log(specialHours)
       this.specialHours = specialHours
 
     },

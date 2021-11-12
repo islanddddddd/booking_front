@@ -84,6 +84,7 @@ export default {
       alert('signOut')
       Cookies.remove('userId');
       Cookies.remove('admin');
+      Cookies.remove('user');
       this.init()
     },
     init() {
