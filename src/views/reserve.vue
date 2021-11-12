@@ -266,12 +266,16 @@ export default {
       } else {
         data = this.getDataAddByUser(fa);
       }
+      console.log('预约data：')
+      console.log(data)
       const res = await addReserve(data);
       console.log('confrim data:')
       console.log(data)
+      console.log(data.days)
+      console.log(typeof data.days)
       if (res.data.status == 'failed, no access') alert('add faill')
       else alert('add success')
-      location.reload()
+      // location.reload()
       //  这里可以跳出一个窗口用以显示已预约的订单信息
 
     },

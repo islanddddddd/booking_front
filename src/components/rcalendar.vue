@@ -43,6 +43,7 @@
       hide-view-selector
       :special-hours="specialHours"
       :dblclickToNavigate="false"
+      :disable-days=disable_days
       today-button
       @cell-click="getWeek('cell-click ', $event)"
   />
@@ -84,7 +85,7 @@ export default {
     async changeUnit(unit, facility_id) {
       console.log('changeUnit')
       this.unit = unit
-      if (unit == 1)
+      if (unit == 1 || unit == 2)
         await this.getSpecialHours_days(this.msg.facility.facility_id)
       else if (unit == 0) {
         console.log('getSpecialHours_hours')
@@ -94,9 +95,6 @@ export default {
           await this.getSpecialHours_hours(date + add, i.toString(), this.msg.facility.facility_id)
           // await this.getSpecialHours_hours(date + add, i.toString(), facility_id)
         }
-      } else if (unit == 1) {
-        await this.getSpecialHours_days(this.msg.facility.facility_id)
-
       }
     },
     async getSpecialHours_hours(date, day, facility_id) {
@@ -223,7 +221,7 @@ export default {
       time2 = this.$props.msg.endTime;
       this.times.date = new Date(e).format('YYYY-MM-DD');
       startTime = e.setHours(time1);
-      startTime = new Date(startTime).format('YYYY-MM-DD-HH:00');
+      startTime = new Date(startTime).format('YYYY-MM-DD-HH');
       this.times.startTime = startTime;
       let addTime = new Date(e);
       endTime = addTime.setDate(addTime.getDate() + 7);
@@ -233,6 +231,26 @@ export default {
 
       //新的
       this.backTimes(e)
+      // this.times.days = []
+      let days = []
+      let startdate = new Date(e).getDate()
+
+      let disable_days_date = []
+      console.log(this.disable_days)
+
+      for (const disableDaysDateKey in this.disable_days) {
+        disable_days_date.push(new Date(this.disable_days[disableDaysDateKey]).getDate())
+      }
+      console.log('disable_days_date:')
+      console.log(disable_days_date)
+      for (let i = 0; i < 7; i++) {
+        if (disable_days_date.indexOf(startdate + i) === -1)
+          days.push(startdate + i)
+      }
+      this.times.days = days
+      alert(days)
+
+      // alert(startdate)
 
       this.$emit('childFn', this.times);
       this.$emit('father-click');
