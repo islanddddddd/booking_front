@@ -187,10 +187,10 @@ export default {
     getHours(s, e) {
       console.log("e:");
       console.log(e);
-      if (this.hours_ava.indexOf(e.getHours() - 1) == -1) {
+      if (this.hours_ava.indexOf(e.getHours()) == -1) {
         console.log("选择的不是可用时间");
         console.log(this.hours_ava)
-        console.log(e.getHours() - 1)
+        console.log(e.getHours())
       } else {
         // 这是弃用的,但还有点用
         this.times.date = new Date(e).format("YYYY-MM-DD");
