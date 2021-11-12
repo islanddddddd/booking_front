@@ -14,7 +14,7 @@
       style="height: 25rem"
       :time-from="msg.startTime * 60"
       :time-to="msg.endTime * 60"
-      active-view="week"
+      active-view="day"
       hide-view-selector
       :special-hours="specialHours"
       :dblclickToNavigate="false"
@@ -90,16 +90,21 @@ export default {
         );
       else if (unit == 0) {
         console.log("getSpecialHours_hours");
-        let day = new Date().getDay();
         let date = new Date().getDate();
-        for (let i = day, add = 0; i < 8; i++, add++) {
-          await this.getSpecialHours_hours(
-              date + add,
-              i.toString(),
-              this.msg.facility.facility_id
-          );
-          // await this.getSpecialHours_hours(date + add, i.toString(), facility_id)
-        }
+        let day = new Date().getDay();
+        alert(date)
+        await this.getSpecialHours_hours(
+            date,
+            day,
+            this.msg.facility.facility_id
+        );
+        // for (let i = day, add = 0; i < 8; i++, add++) {
+        //   await this.getSpecialHours_hours(
+        //       date + add,
+        //       i.toString(),
+        //       this.msg.facility.facility_id
+        //   );
+        // }
       }
     },
     async getSpecialHours_hours(date, day, facility_id) {
@@ -108,6 +113,7 @@ export default {
       const res = await get_hour_ava(data);
       let hours_ava = res.data.hours;
       this.hours_ava = hours_ava;
+      console.log(hours_ava)
 
       let specialHours = {};
       let hour_ava_arr = []; //每一天空闲数组
@@ -187,10 +193,11 @@ export default {
     getHours(s, e) {
       console.log("e:");
       console.log(e);
+      console.log(this.hours_ava)
+      console.log(e.getHours())
       if (this.hours_ava.indexOf(e.getHours()) == -1) {
         console.log("选择的不是可用时间");
-        console.log(this.hours_ava)
-        console.log(e.getHours())
+
       } else {
         // 这是弃用的,但还有点用
         this.times.date = new Date(e).format("YYYY-MM-DD");
