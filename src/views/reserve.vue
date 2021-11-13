@@ -2,8 +2,9 @@
   <h1>Reserve</h1>
   <!-- 模态框 -->
   <!--  <div class="modal fade" id="calendar" v-if="this.msg.facility!=undefined">-->
-  <div class="modal fade" id="calendar">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+  <div class="modal fade " id="calendar">
+<!--    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">-->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-fullscreen">
       <div class="modal-content">
         <!-- 模态框头部 -->
         <div class="modal-header">

@@ -7,13 +7,13 @@
   </dl>
 
   <!--  <button class="btn btn-primary m-1" @click="changeUnit(0)">hour</button>-->
-    <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>
-    <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>
+  <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>
+  <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>
   <!--  <button @click="createEvent('2021-11-13 14:00','2021-11-13 18:00',)">create events</button>-->
   <!--  <button @click="returnHours">return</button>-->
   <vue-cal
       v-if="unit == 0"
-      style="height: 25rem"
+      style="height: 100%"
       :time-from="msg.startTime * 60"
       :time-to="msg.endTime * 60"
       active-view="day"
@@ -31,7 +31,8 @@
   >
 
     <vue-cal
-        style="height: 25rem"
+        style="height: 40rem"
+
         :time-from="msg.startTime * 60"
         :time-to="msg.endTime * 60"
         active-view="month"
@@ -50,7 +51,8 @@
   <div v-else-if="unit == 3">
 
     <vue-cal
-        style="height: 25rem"
+        style="height: 40rem"
+
         :time-from="msg.startTime * 60"
         :time-to="msg.endTime * 60"
         active-view="year"
@@ -195,40 +197,67 @@ export default {
       let data = {facility_id, 'year': year, 'month': month};
       const res = await get_day_ava(data);
       // alert(res.data)
-      let days = res.data.days;
+      let res_data = res.data.days;
 
       let month_days = [];
       let e_date = new Date(e)
       let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
 
+
       for (let i = 1; i < max_day + 1; i++) {
         month_days[i - 1] = i;
       }
-      // console.log(month_days)
-      if (month_days.length != max_day) {
-        days = month_days.filter(function (v) {
-          return days.indexOf(v) == -1;
-        });
+      let days = month_days
+
+      if (res_data.length != 0 && res_data.length != max_day) {
+        for (let i = 0; i < res_data.length; i++) {
+          let a = res_data[i]
+          for (let j = 0; j < month_days.length; j++) {
+            let b = month_days[j]
+            // if (res[i] == month_days[j]) delItem(res[i], days);
+            if (a == b) {
+              console.log(b)
+              delItem(a, days)
+              break
+            }
+          }
+        }
+      } else if (res_data.length == max_day) {
+        // alert('空')
       }
 
+      function delItem(item, list) {
+        // 表示先获取这个元素的下标，然后从这个下标开始计算，删除长度为1的元素
+        list.splice(list.indexOf(item), 1)
+      }
 
+      console.log(days)
       let disable_days = [];
       let now_year = year;
       let now_month = month - 1;
 
-      let today = new Date()
       //过去的时间不可选
-      if (today.getMonth() == now_month) {
-        for (let i = 1; i < today.getDate() + 1; i++) {
-          let disable_day = new Date(
-              now_year,
-              now_month,
-              i
-          ).format();
-          disable_days.push(disable_day);
-        }
+      let today = new Date()
+      let today_month = today.getMonth()
+      let today_year = today.getFullYear()
+
+      // let e_date = new Date(e)
+      max_day = new Date(now_year, now_month, 0).getDate()
+
+      // if (today.getMonth() == now_month) {
+
+      if (today_month == now_month) {
+        // for (let i = 1; i < today.getDate() + 1; i++) {
+        //   let disable_day = new Date(
+        //       now_year,
+        //       now_month,
+        //       i
+        //   ).format();
+        //   // disable_days.push(disable_day);
+        // }
+        // console.log(disable_days)
       } else if (today.getMonth() > now_month) {
-        for (let i = 1; i < 32 + 1; i++) {
+        for (let i = 1; i < max_day + 1; i++) {
           let disable_day = new Date(
               now_year,
               now_month,
@@ -240,6 +269,7 @@ export default {
       }
       // let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
 
+      console.log(days.length)
       if (days.length == 0) {
         for (let i = 1; i < max_day + 1; i++) {
           let disable_day = new Date(
@@ -253,13 +283,11 @@ export default {
         disable_days = []
       } else {
         for (let i = 0; i < days.length; i++) {
-          let disable_day = new Date(
-              now_year,
-              now_month,
-              days[i]
-          ).format();
+          let disable_day = new Date(now_year, now_month, days[i]).format();
+          console.log(disable_day)
           disable_days.push(disable_day);
         }
+        console.log(disable_days)
       }
 
       this.disable_days = disable_days;
