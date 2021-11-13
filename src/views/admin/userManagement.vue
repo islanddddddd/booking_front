@@ -191,9 +191,13 @@ export default {
 	methods: {
     async onSubmit() {
       console.log(this.modifyTable.gender);
+      const data = this.modifyTable;
+      data['gender'] = data['gender'] === 0 ? "Female" : "Male";
+
       const res = await updateUser(this.modifyTable);
       if (res.status === 200) {
         console.log("update success")
+        this.$router.go(0);
       }
     },
 		deleteUser(userid) {

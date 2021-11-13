@@ -69,11 +69,6 @@
         <!-- 模态框内容 -->
         <div class="modal-body">
           <form>
-
-
-
-
-
             <div class="form-floating">
               <input
                   type="text"
