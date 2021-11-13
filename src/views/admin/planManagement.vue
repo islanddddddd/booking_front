@@ -24,7 +24,7 @@
         <td>{{ item.description }}</td>
         <td>{{ getUnitName(item.unit) }}</td>
 <!--				<td v-for="(item, index) in item">{{ item }}</td>-->
-				<td><button type="button" class="btn btn-danger" @click="deleteUser(index)">delete</button></td>
+<!--				<td><button type="button" class="btn btn-danger" @click="deleteUser(index)">delete</button></td>-->
 <!--				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>-->
 			</tr>
 		</tbody>
@@ -188,7 +188,7 @@ export default {
       officeList: [],
       facilityTypeList: [],
       addPlanTable: {},
-			dataTitle:['planId','Price','typeId', 'Category','description', 'unit', 'delete'],
+			dataTitle:['planId','Price','typeId', 'Category','description', 'unit',],
 			data: {
 				'1': {
 					planPrice: '1$/day',
