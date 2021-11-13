@@ -165,16 +165,30 @@ export default {
       let disable_days = [];
       let now_year = year;
       let now_month = month - 1;
-      let today = new Date().getDate()
 
-      for (let i = 1; i < today + 1; i++) {
-        let disable_day = new Date(
-            now_year,
-            now_month,
-            i
-        ).format();
-        disable_days.push(disable_day);
+      let today = new Date()
+      //过去的时间不可选
+      if (today.getMonth() == now_month) {
+        for (let i = 1; i < today.getDate() + 1; i++) {
+          let disable_day = new Date(
+              now_year,
+              now_month,
+              i
+          ).format();
+          disable_days.push(disable_day);
+        }
+      } else if (today.getMonth() > now_month) {
+        for (let i = 1; i < 32 + 1; i++) {
+          let disable_day = new Date(
+              now_year,
+              now_month,
+              i
+          ).format();
+          disable_days.push(disable_day);
+        }
+        // alert('过去了')
       }
+
 
       for (let i = 0; i < days.length; i++) {
         let disable_day = new Date(
