@@ -24,11 +24,60 @@
         <td>{{ item.description }}</td>
         <td>{{ getUnitName(item.unit) }}</td>
 <!--				<td v-for="(item, index) in item">{{ item }}</td>-->
-<!--				<td><button type="button" class="btn btn-danger" @click="deleteUser(index)">delete</button></td>-->
+				<td><button type="button" class="btn btn-primary"
+                    @click="selectedPlanId=item.planId" data-bs-toggle="modal" data-bs-target="#buyModal">Buy</button></td>
 <!--				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>-->
 			</tr>
 		</tbody>
 	</table>
+  <!-- 模态框 -->
+  <div class="modal" id="buyModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- 模态框头部 -->
+        <div class="modal-header">
+          <h4 class="modal-title">Add Office</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- 模态框内容 -->
+        <div class="modal-body">
+          <form>
+            <div class="row col-10">
+              <div class="col-2 align-self-center">Type</div>
+              <select class="form-select col" v-model="buyPlanTable.userId" aria-label="Default select example">
+                <option v-for="item in userList" :value="item.userId">{{ item.userName + '('+item.userId+")" }}</option>
+              </select>
+              <!-- <button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Select</button> -->
+            </div>
+            <div class="form-floating">
+              <input
+                  type="number"
+                  class="form-control"
+                  id="numberInput"
+                  placeholder="number"
+                  v-model="buyPlanTable.num"
+              />
+              <label for="numberInput">Number</label>
+            </div>
+
+            <button
+                class="w-100 btn btn-lg btn-primary"
+            type="submit"
+            @click="onSubmitBuyPlan"
+            >
+              Submit
+            </button>
+            <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p> -->
+          </form>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
 
   <!-- 模态框 -->
   <div class="modal" id="myModal">
@@ -180,15 +229,18 @@
 </template>
 
 <script>
-import {addPlan, getFacilityType, getOffice, getPlan} from "../../utils/api";
+import {addPlan, buy_plan, get_all_user, getFacilityType, getOffice, getPlan} from "../../utils/api";
 
 export default {
 	data() {
 		return {
       officeList: [],
+      selectedPlanId: '',
       facilityTypeList: [],
+      buyPlanTable: {},
       addPlanTable: {},
-			dataTitle:['planId','Price','typeId', 'Category','description', 'unit',],
+      userList: [],
+			dataTitle:['planId','Price','typeId', 'Category','description', 'unit', "Buy"],
 			data: {
 				'1': {
 					planPrice: '1$/day',
@@ -236,6 +288,14 @@ export default {
       }
 
     },
+    async onSubmitBuyPlan() {
+      const data = this.buyPlanTable;
+      data['planId'] = this.selectedPlanId;
+      const res = await buy_plan(data);
+      if (res.status === 200) {
+        console.log("buy success");
+      }
+    },
 		deleteUser(userid) {
 			alert(userid);
 		},
@@ -243,6 +303,10 @@ export default {
 			alert(userid);
 		},
     async initData() {
+      const userData = await get_all_user();
+      if (userData.status === 200) {
+        this.userList = userData.data.data;
+      }
       const res = await getFacilityType();
       if (res.status === 200) {
         this.facilityTypeList = res.data.data

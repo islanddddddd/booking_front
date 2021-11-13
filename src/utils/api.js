@@ -31,10 +31,12 @@ export const addOffice = data => http.post("/manage/add_office_location/", data)
 export const get_hour_ava = data => http.get("/manage/get_hour_ava/", data);
 export const get_day_ava = data => http.get("/manage/get_day_ava/", data);
 
-export const get_all_user = () => http.get("user/get_all_user/");
+export const get_all_user = () => http.get("manage/get_all_users/");
 
-export const get_all_user_reserve = () => http.get("manage/get_all_reserve/")
+export const get_all_user_reserve = () => http.get("manage/get_all_user_reserve/")
 
 export const get_user_reserve = data => http.get("manage/get_user_reserve/", data);
 
-export const cancel_reserve = data => http.post("manage/cancel_reserve/", data);
+export const buy_plan = data => http.post("manage/buy_plan/", data);
+
+export const cancel_reserve = data => http.get("manage/cancel_reserve/", data);

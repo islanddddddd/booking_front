@@ -54,6 +54,7 @@ export default {
         Home: 'profile',
         Orders: 'order',
         Reserve: 'reserve',
+
       },
       adminLinks: {
         Home: 'profile',
