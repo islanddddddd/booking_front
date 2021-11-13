@@ -29,7 +29,6 @@
                 @click="selectedPlanId=item.planId" data-bs-toggle="modal" data-bs-target="#buyModal">Buy
         </button>
       </td>
-      <!--				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>-->
     </tr>
     </tbody>
   </table>
@@ -55,7 +54,6 @@
                   }}
                 </option>
               </select>
-              <!-- <button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Select</button> -->
             </div>
             <div class="form-floating">
               <input
@@ -75,7 +73,6 @@
             >
               Submit
             </button>
-            <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p> -->
           </form>
         </div>
 
@@ -202,17 +199,6 @@
               />
               <label for="descInput">Description</label>
             </div>
-
-            <!--            <div class="form-floating">-->
-            <!--              <input-->
-            <!--                  type="email"-->
-            <!--                  class="form-control"-->
-            <!--                  placeholder="Password"-->
-            <!--                  v-model="modifyTable.email"-->
-            <!--              />-->
-            <!--              <label for="floatingPassword">Email</label>-->
-            <!--            </div>-->
-
 
             <button
                 class="w-100 btn btn-lg btn-primary"
