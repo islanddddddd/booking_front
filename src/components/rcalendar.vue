@@ -20,7 +20,7 @@
       :special-hours="specialHours"
       :dblclickToNavigate="false"
       today-button
-      :events="[]"
+      :events="events"
       @cell-click="getHours('cell-click ', $event)"
       @view-change="viewChange('view-change', $event)"
   />
@@ -68,11 +68,15 @@ export default {
   props: ["msg"],
   emits: ["childFn"],
   data: () => ({
-    events: {
-      start: "2021-11-19 12:00", // Required.
-      end: "2021-11-19 14:00",
-      class: "badevents",
-    },
+    events: [
+      {
+        start: '2021-11-13 10:30',
+        end: '2021-11-13 11:30',
+        title: 'Doctor appointment',
+        content: '<i class="v-icon material-icons">local_hospital</i>',
+        class: 'btn-primary'
+      },
+    ],
     times: {},
     specialHours: {},
     day_ava: 0,
@@ -100,15 +104,23 @@ export default {
       } else if (unit == 0) {
         let date = new Date(starTime).getDate()
         let day = new Date(starTime).getDay()
+        let year = new Date(starTime).getFullYear()
+        let month = new Date(starTime).getMonth()
         if (day == 0) day = 7
         await this.getSpecialHours_hours(
             date,
             day,
+            year,
+            month,
             this.msg.facility.facility_id
         );
       }
     },
-    async getSpecialHours_hours(date, day, facility_id) {
+    async getSpecialHours_hours(date, day, year, month, facility_id) {
+      // alert(year)
+      // alert(month)
+      // alert(date)
+      // alert(new Date().getMonth())
       //几号，周几，id
       let data = {facility_id, day: date};
       const res = await get_hour_ava(data);
@@ -142,6 +154,20 @@ export default {
         i = outside_j - 1;
       }
       specialHours[day] = hour_ava_arr;
+
+      let today = new Date()
+      let today_year = today.getFullYear()
+      let today_month = today.getMonth()
+      let today_date = today.getDate()
+      if (today.getFullYear() > year || today.getMonth() > month || today.getDate() > date) {
+        // alert('过了')
+        console.log('过了')
+        hour_ava_arr = [];
+        hours_ava = []
+        // this.specialHours[day] = hour_ava_arr;
+        console.log(specialHours)
+        console.log(specialHours[day])
+      }
 
       this.specialHours[day] = hour_ava_arr;
       console.log('this.specialHours')
