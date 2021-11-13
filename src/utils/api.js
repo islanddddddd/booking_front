@@ -40,3 +40,5 @@ export const get_user_reserve = data => http.get("manage/get_user_reserve/", dat
 export const buy_plan = data => http.post("manage/buy_plan/", data);
 
 export const cancel_reserve = data => http.get("manage/cancel_reserve/", data);
+
+export const get_user_by_id = data => http.get("manage/get_user_by_Id/", data);

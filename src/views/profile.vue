@@ -12,7 +12,7 @@
 
     <!--      </div>-->
     <!--    </div>-->
-    <h4 class="text-capitaliz " v-if="user.admin ==true">Admin</h4>
+    <h4 class="text-capitaliz " v-if="user.admin">Admin</h4>
 
     <dl class="row text-capitalize">
       <div class="row col-6" v-for="(item, index) in user">
@@ -170,7 +170,7 @@
 
 <script>
 import Cookies from 'js-cookie'
-import {updateUser} from "../utils/api";
+import {get_user_by_id, updateUser} from "../utils/api";
 
 export default {
   data() {
@@ -181,7 +181,7 @@ export default {
         time: '2021-12-12'
       },
       order: '无',
-      user: JSON.parse(Cookies.get("user"))
+      user: {}
     };
   },
   methods: {
@@ -192,6 +192,14 @@ export default {
       // alert('order');
 
     },
+    async initData() {
+      const res = await get_user_by_id({"userId":Cookies.get("userId")})
+      if (res.status === 200) {
+        this.user = res.data.user;
+      }
+      console.log(res.data, "aaa");
+
+    },
     async onSubmit() {
       console.log(this.modifyTable.gender);
       const data = this.modifyTable;
@@ -200,12 +208,15 @@ export default {
       const res = await updateUser(this.modifyTable);
       if (res.status === 200) {
         console.log("update success")
-        this.user = this.modifyTable;
+
         this.$router.go(0);
       }
     }
   },
-  components: {}
+  components: {},
+  created() {
+    this.initData();
+  }
 };
 </script>
 
