@@ -3,7 +3,7 @@
   <!-- 模态框 -->
   <!--  <div class="modal fade" id="calendar" v-if="this.msg.facility!=undefined">-->
   <div class="modal fade " id="calendar">
-<!--    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">-->
+    <!--    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">-->
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable  modal-fullscreen">
       <div class="modal-content">
         <!-- 模态框头部 -->
@@ -69,20 +69,24 @@
                 </div>
               </div>
             </div>
-            <div class="row g-2">
+
+            <div class="row g-2" v-if="times.unit==0">
               <div class="col">
                 <div class="form-floating">
-                  <input type="text" class="form-control" v-model="times.startTime" readonly="readonly"/>
-                  <label>Start</label>
-                </div>
-              </div>
-              <div class="col">
-                <div class="form-floating">
-                  <input type="text" class="form-control" v-model="times.endTime" readonly="readonly"/>
-                  <label>End</label>
+                  <input type="text" class="form-control" v-model="times.hours" readonly="readonly"/>
+                  <label>Hours List</label>
                 </div>
               </div>
             </div>
+            <div class="row g-2">
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control" v-model="times.days" readonly="readonly"/>
+                  <label>Days List</label>
+                </div>
+              </div>
+            </div>
+
             <div class="row g-2">
               <div class="col">
                 <div class="form-floating">
@@ -199,7 +203,7 @@ export default {
         startTime: 0,
         endTime: 24,
       },
-      times: {startTime: '1', endTime: '1', jump: '0'},//日历组件传回的数据
+      times: {},//日历组件传回的数据
       price: 0,//订单价格
       operater_id: ''
     };
@@ -285,8 +289,19 @@ export default {
       }
       const res = await addReserve(data);
       if (res.data.status == 'failed, no access') alert('add faill')
-      else alert('add success')
-      // location.reload()
+      else {
+        let str = ''
+        str += 'add success!您预约的时间段是：'
+        if (res.data.hours != undefined) {
+          str = str + 'HoursList:' + res.data.hours
+        }
+        if (res.data.days != undefined) {
+          str = str + 'daysList:' + res.data.hours
+
+        }
+        alert(str)
+      }
+      location.reload()
       //  这里可以跳出一个窗口用以显示已预约的订单信息
 
 

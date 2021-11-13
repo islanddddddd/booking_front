@@ -80,15 +80,7 @@ export default {
   props: ["msg"],
   emits: ["childFn"],
   data: () => ({
-    events: [
-      {
-        start: '2021-11-13 1:00',
-        end: '2021-11-13 3:30',
-        title: 'Boring event',
-        content: '<i class="icon material-icons">block</i><br>I am not draggable, not resizable and not deletable.',
-        class: 'bg-info',
-      },
-    ],
+    events: [],
     times: {},
     specialHours: {},
     day_ava: 0,
@@ -268,8 +260,8 @@ export default {
         // alert('过去了')
       }
       // let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
-
       console.log(days.length)
+      max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
       if (days.length == 0) {
         for (let i = 1; i < max_day + 1; i++) {
           let disable_day = new Date(
@@ -429,8 +421,8 @@ export default {
 
         endTime = item.end
       }
-      this.times.startTime = startTime
-      this.times.endTime = endTime
+      this.times.startTime = ''
+      this.times.endTime = ''
       this.times.days = JSON.stringify([date]);
       this.times.hours = JSON.stringify(hours);
       this.times.month = month + 1;
