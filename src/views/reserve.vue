@@ -291,7 +291,7 @@ export default {
       if (res.data.status == 'failed, no access') alert('add faill')
       else {
         let str = ''
-        str += 'add success!您预约的时间段是：'
+        str += 'add success!Your reserve time is :'
         if (res.data.hours != undefined) {
           str = str + 'HoursList:' + res.data.hours
         }

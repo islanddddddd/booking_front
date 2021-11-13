@@ -21,7 +21,6 @@
 
       :special-hours="specialHours"
       :dblclickToNavigate="false"
-      today-button
       :events="events"
       @cell-click="create_hours_events('cell-click ', $event)"
       @view-change="viewChange('view-change', $event)"
