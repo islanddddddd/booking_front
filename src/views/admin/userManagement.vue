@@ -9,9 +9,17 @@
 		</thead>
 		<tbody>
 			<tr v-for="(item, index) in data">
-				<th>{{ index }}</th>
-				<td v-for="(item, index) in item">{{ item }}</td>
-				<td><button type="button" class="btn btn-danger" @click="deleteUser(index)">delete</button></td>
+<!--				<th>{{ index }}</th>-->
+        <td>{{item.userId}}</td>
+        <td>{{item.userName}}</td>
+        <td>{{item.firstName}}</td>
+        <td>{{item.lastName}}</td>
+        <td>{{item.gender===0?"Female":"Male"}}</td>
+        <td>{{item.tel}}</td>
+        <td>{{item.address}}</td>
+        <td>{{item.email}}</td>
+<!--				<td v-for="(item, index) in item">{{ item }}</td>-->
+<!--				<td><button type="button" class="btn btn-danger" @click="deleteUser(index)">delete</button></td>-->
 <!--				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>-->
         <td>
           <button @click="modifyUser(index)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
@@ -142,12 +150,12 @@
 </template>
 
 <script>
-import {updateUser} from "../../utils/api";
+import {get_all_user, updateUser} from "../../utils/api";
 
 export default {
 	data() {
 		return {
-			dataTitle:['userId','userName','firstName','lastName','gender','tel','address','email','delete','modify'],
+			dataTitle:['userId','userName','firstName','lastName','gender','tel','address','email','modify'],
       modifyTable: {},
 			data: {
 				'1': {
@@ -194,9 +202,19 @@ export default {
 		modifyUser(userid) {
 			// alert(userid);
       this.modifyTable = this.data[userid]
-		}
+		},
+    async initData() {
+      const res = await get_all_user();
+      if (res.status === 200) {
+        this.data = res.data.data
+      }
+    }
 	},
-	components: {}
+	components: {},
+  created() {
+    this.initData();
+
+  }
 };
 </script>
 

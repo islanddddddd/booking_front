@@ -66,7 +66,7 @@ export default {
     async onSubmit() {
       if (this.dataForm.email !== '' && this.dataForm.passwd !== '') {
         const res = await userLogin(this.dataForm);
-        if (res.data.status == 'success') {
+        if (res.data.status === 'success') {
           const user = res.data.user
           console.log("登陆成功");
           // alert('登陆成功')

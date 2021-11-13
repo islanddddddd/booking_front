@@ -19,7 +19,10 @@
 </template>
 
 <script>
+import Cookies from "js-cookie";
 export default {
+
+
 	data() {
 		return {
 			dataTitle: ['userId', 'userName','type','time','endtime', 'delete', 'modify'],
@@ -39,11 +42,19 @@ export default {
 		},
 		modifyUser(userid) {
 			alert(userid);
-		}
+		},
+    async getAllOrder() {
+      // const res = await
+    }
 	},
 	components: {},
   created() {
-    const userId = Cookies.get("userId");
+    const admin = Cookies.get("admin");
+    if (admin) {
+      console.log("i am admin");
+    } else {
+      console.log("i am not admin")
+    }
 
   }
 };
