@@ -44,20 +44,24 @@
 
     />
   </div>
+  <div v-else-if="unit == 3">
+    月
+    <vue-cal
+        style="height: 25rem"
+        :time-from="msg.startTime * 60"
+        :time-to="msg.endTime * 60"
+        active-view="year"
+        :disable-views="['years','week']"
 
-  <!--  <vue-cal-->
-  <!--      v-else-if="unit == 2"-->
-  <!--      style="height: 25rem"-->
-  <!--      :time-from="msg.startTime * 60"-->
-  <!--      :time-to="msg.endTime * 60"-->
-  <!--      active-view="month"-->
-  <!--      :disable-views="['years']"-->
-  <!--      :special-hours="specialHours"-->
-  <!--      :dblclickToNavigate="false"-->
-  <!--      :disable-days="disable_days"-->
-  <!--      today-button-->
-  <!--      @cell-click="getWeek('cell-click ', $event)"-->
-  <!--  />-->
+        :dblclickToNavigate="false"
+        :disable-days="disable_days"
+        @cell-click="getMonth($event)"
+        @view-change="viewChange('view-change', $event)"
+
+    />
+  </div>
+
+
 </template>
 
 <script>
@@ -93,16 +97,21 @@ export default {
       console.log(e)
       console.log(e.view)
       console.log(e.startDate)
-      if (e.view == 'day') this.changeUnit(0, e.startDate)
-      else if (e.view == 'month') this.changeUnit(1, e.startDate)
+
+      let starTime = e.startDate
+      if (e.view == 'day') this.changeUnit(0, starTime)
+      else if (e.view == 'month') this.changeUnit(1, starTime)
+      else if (e.view == 'year') this.changeUnit(3, starTime)
+
     },
     async changeUnit(unit, starTime) {
       this.unit = unit;
-      if (unit == 1 || unit == 2) {
+      if (unit == 1 || unit == 2 || unit == 3) {
         let year = new Date(starTime).getFullYear()
         let month = new Date(starTime).getMonth() + 1
+        let e = new Date(starTime)
         await this.getSpecialHours_days(
-            this.msg.facility.facility_id, year, month
+            this.msg.facility.facility_id, year, month, e
         );
       } else if (unit == 0) {
         let date = new Date(starTime).getDate()
@@ -176,20 +185,29 @@ export default {
       console.log('this.specialHours')
       console.log(this.specialHours)
     },
-    async getSpecialHours_days(facility_id, year, month) {
+    async getSpecialHours_days(facility_id, year, month, e) {
       // alert("year:" + year.toString() + "month:" + month.toString())
       // let data = {facility_id};
+      this.disable_days = []
       let data = {facility_id, 'year': year, 'month': month};
       const res = await get_day_ava(data);
+      // alert(res.data)
       let days = res.data.days;
+
       let month_days = [];
-      for (let i = 1; i < 31; i++) {
+      let e_date = new Date(e)
+      let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
+
+      for (let i = 1; i < max_day + 1; i++) {
         month_days[i - 1] = i;
       }
       // console.log(month_days)
-      days = month_days.filter(function (v) {
-        return days.indexOf(v) == -1;
-      });
+      if (month_days.length != max_day) {
+        days = month_days.filter(function (v) {
+          return days.indexOf(v) == -1;
+        });
+      }
+
 
       let disable_days = [];
       let now_year = year;
@@ -217,16 +235,30 @@ export default {
         }
         // alert('过去了')
       }
+      // let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
 
-
-      for (let i = 0; i < days.length; i++) {
-        let disable_day = new Date(
-            now_year,
-            now_month,
-            days[i]
-        ).format();
-        disable_days.push(disable_day);
+      if (days.length == 0) {
+        for (let i = 1; i < max_day + 1; i++) {
+          let disable_day = new Date(
+              now_year,
+              now_month,
+              i
+          ).format();
+          disable_days.push(disable_day);
+        }
+      } else if (days.length == max_day) {
+        disable_days = []
+      } else {
+        for (let i = 0; i < days.length; i++) {
+          let disable_day = new Date(
+              now_year,
+              now_month,
+              days[i]
+          ).format();
+          disable_days.push(disable_day);
+        }
       }
+
       this.disable_days = disable_days;
       console.log("disable_days");
       console.log(disable_days);
@@ -254,8 +286,60 @@ export default {
           // alert(this.events[i].start)
         }
       }
+    },
+    async getMonth(e) {
+      let e_date = new Date(e)
+
+      let fa_id = this.msg.facility.facility_id
+      let year = new Date(e_date).getFullYear()
+      let month = new Date(e_date).getMonth() + 1
+      // let data = {fa_id, 'year': year, 'month': month};
+      // const res = await get_day_ava(data);
+      // let days = res.data.days;
+      await this.getSpecialHours_days(fa_id, year, month, e)
+      let dis = this.disable_days
+      let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
+
+      if (dis.length >= max_day) {
+        alert('There is no time this month')
+      } else {
+        console.log(e)
+        let today = new Date()
+        if (e_date.getFullYear() < today.getFullYear()) {
+          alert('You cannot select a previous time')
+
+        } else if (e_date.getFullYear() == today.getFullYear() && e_date.getMonth() + 1 < today.getMonth() + 1) {
+          alert('You cannot select a previous time')
+
+        } else {
+          let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
+          let days = []
+          for (let i = 1; i < max_day + 1; i++) {
+            days.push(i)
+          }
+          //新的
+          this.times.unit = this.unit;
+          this.times.year = e_date.getFullYear();
+          //为啥+1我忘了，可能再父组件我又改了
+          this.times.month = e_date.getMonth() + 1;
+          this.times.days = JSON.stringify(days);
+          this.times.hours = JSON.stringify([]);
 
 
+          this.$emit("childFn", this.times);
+          this.$emit("father-click");
+        }
+
+
+      }
+    },
+    async get_month_ava(e) {
+      let e_date = new Date(e)
+      let year = e_date.getFullYear()
+      let month = e_date.getMonth()
+      await this.getSpecialHours_days(
+          this.msg.facility.facility_id, year, month, e
+      );
     },
     //创建事件
     createEvent(start, end) {
@@ -289,8 +373,8 @@ export default {
       if (this.unit == 0) {
         // alert(this.unit)
         this.returnHours()
-
       }
+      //现在点击月和天会直接跳转，没用上confirm
       this.$emit("childFn", this.times);
 
       this.$emit("father-click");
@@ -312,7 +396,6 @@ export default {
         if (year == '')
           year = new Date(item.start).getFullYear()
 
-
         endTime = item.end
       }
       this.times.startTime = startTime
@@ -326,25 +409,6 @@ export default {
       console.log(times)
       // this.$emit("childFn", this.times);
       // this.$emit("father-click");
-    },
-    getHours(s, e) {
-      if (this.hours_ava.indexOf(e.getHours()) == -1) {
-        console.log("选择的不是可用时间");
-      } else {
-
-        // 这是弃用的,但还有点用
-        this.times.date = new Date(e).format("YYYY-MM-DD");
-        this.times.startTime = new Date(e).format("HH:00");
-        let addTime = e.setHours(e.getHours() + 1);
-        this.times.endTime = new Date(addTime).format("HH:00");
-
-        this.backTimes(e);
-        this.times.days = JSON.stringify([(this.times.days)]);
-        this.times.hours = JSON.stringify([(this.times.hours)]);
-
-        this.$emit("childFn", this.times);
-        this.$emit("father-click");
-      }
     },
     async getDay(s, e) {
       //旧的
