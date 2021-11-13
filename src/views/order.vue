@@ -9,10 +9,18 @@
 		</thead>
 		<tbody>
 			<tr v-for="(item, index) in data">
-				<th>{{ index }}</th>
-				<td v-for="(item, index) in item">{{ item }}</td>
-				<td><button type="button" class="btn btn-danger" @click="deleteUser(index)">delete</button></td>
-				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>
+<!--				<th>{{ index }}</th>-->
+<!--				<td v-for="(item, index) in item">{{ item }}</td>-->
+        <td>{{item.id}}</td>
+        <td>{{item.facility_id}}</td>
+        <td>{{item.userId}}</td>
+        <td>{{getUnitName(item.unit)}}</td>
+        <td>{{item.year}}</td>
+        <td>{{item.month}}</td>
+        <td>{{item.day}}</td>
+        <td>{{item.hour}}</td>
+        <td>{{item.used}}</td>
+				<td><button type="button" class="btn btn-danger" @click="cancelOrder(item.id)">Cancel</button></td>
 			</tr>
 		</tbody>
 	</table>
@@ -20,12 +28,11 @@
 
 <script>
 import Cookies from "js-cookie";
+import {cancel_reserve, get_all_user_reserve, get_user_reserve} from "../utils/api";
 export default {
-
-
 	data() {
 		return {
-			dataTitle: ['userId', 'userName','type','time','endtime', 'delete', 'modify'],
+			dataTitle: ['id', 'FacilityId','UserId','Unit','Year', 'Month', 'Day', "Hour", "Used","Cancel",],
 			data: {
 				'1': {
 					userName: 'shybee',
@@ -37,23 +44,60 @@ export default {
 		};
 	},
 	methods: {
+    getUnitName(i) {
+      if (i === 0) {
+        return "hour";
+      } else if (i === 1) {
+        return "day";
+      }  else if (i === 2) {
+        return "week";
+      } else if (i === 3) {
+        return "month";
+      }else {
+        return i;
+      }
+
+    },
 		deleteUser(userid) {
 			alert(userid);
 		},
 		modifyUser(userid) {
 			alert(userid);
 		},
+    async cancelOrder(id) {
+      const res = await cancel_reserve({
+        "userId": Cookies.get("userId"),
+        "id": id,
+      });
+      if (res.status === 200 && res.data.status === "success") {
+        console.log("cancel success");
+      }
+    },
+
     async getAllOrder() {
-      // const res = await
+      const res = await get_all_user_reserve();
+      if (res.status === 200 && res.data.status === "success") {
+        this.data = res.data.data
+      }
+    },
+    async getSelfOrder() {
+      const res = await get_user_reserve({
+        "userId": Cookies.get("userId")
+      });
+      if (res.status === 200) {
+        this.data = res.data.data;
+      }
     }
 	},
 	components: {},
   created() {
     const admin = Cookies.get("admin");
-    if (admin) {
+    if (admin === "true") {
       console.log("i am admin");
+      this.getAllOrder();
     } else {
       console.log("i am not admin")
+      this.getSelfOrder();
     }
 
   }
