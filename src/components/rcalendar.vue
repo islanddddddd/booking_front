@@ -7,8 +7,8 @@
   </dl>
 
   <!--  <button class="btn btn-primary m-1" @click="changeUnit(0)">hour</button>-->
-  <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>
-  <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>
+  <button class="btn btn-primary m-1" @click="changeUnit(1,new Date())" v-if="unit==2">select day</button>
+  <button class="btn btn-primary m-1" @click="changeUnit(2,new Date())" v-if="unit==1">select week</button>
   <!--  <button @click="createEvent('2021-11-13 14:00','2021-11-13 18:00',)">create events</button>-->
   <!--  <button @click="returnHours">return</button>-->
   <vue-cal
@@ -29,7 +29,6 @@
   />
   <div v-else-if="unit == 1"
   >
-
     <vue-cal
         style="height: 40rem"
 
@@ -43,9 +42,21 @@
         @cell-click="getDay('cell-click ', $event)"
         @view-change="viewChange('view-change', $event)">
       <!-- Custom cells -->
-      <template v-slot:cell-content="{ cell, view, events, goNarrower }">
-        <span class="vuecal__no-event" v-if="['week', 'day'].includes(view.id) && !events.length">Nothing here 👌</span>
-      </template>
+    </vue-cal>
+  </div>
+  <div v-else-if="unit == 2"
+  >
+    <vue-cal
+        style="height: 40rem"
+        :time-from="msg.startTime * 60"
+        :time-to="msg.endTime * 60"
+        active-view="month"
+        :disable-views="['years','week']"
+        :dblclickToNavigate="false"
+        :disable-days="disable_days"
+        @cell-click="getWeek('cell-click ', $event)"
+        @view-change="viewChange('view-change', $event)">
+      <!-- Custom cells -->
     </vue-cal>
   </div>
   <div v-else-if="unit == 3">
@@ -466,10 +477,7 @@ export default {
       this.times.startTime = startTime;
 
       let addTime = new Date(e);
-      // endTime = addTime.setDate(addTime.getDate() + 7);
       endTime = addTime.setDate(addTime.getDate() + 7);
-      // endTime = addTime.setHours(time2);
-      // endTime = new Date(endTime).setHours(time2);
       this.times.endTime = new Date(endTime).format(
           "YYYY-MM-DD"
       );
@@ -487,13 +495,16 @@ export default {
             ).getDate()
         );
       }
-
-      for (let i = 0; i < 7; i++) {
-        if (disable_days_date.indexOf(startdate + i) === -1)
+      let e_date = new Date(e)
+      let max_day = new Date(e_date.getFullYear(), e_date.getMonth() + 1, 0).getDate()
+      for (let i = 0; i < 7, startdate + i < max_day + 1; i++) {
+        if (disable_days_date.indexOf(startdate + i) === -1) {
+          // if (startdate + i >= max_day)
+          //   break
           days.push(startdate + i);
+        }
       }
       this.times.days = JSON.stringify(days);
-      this.times.hours = JSON.stringify(days);
 
       this.$emit("childFn", this.times);
       this.$emit("father-click");

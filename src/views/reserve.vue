@@ -296,7 +296,7 @@ export default {
           str = str + 'HoursList:' + res.data.hours
         }
         if (res.data.days != undefined) {
-          str = str + 'daysList:' + res.data.hours
+          str = str + 'daysList:' + res.data.days
 
         }
         alert(str)
