@@ -1,35 +1,38 @@
 <template>
-	<h1>Plan Management</h1>
-	<div class="container-fluid text-center " style="padding: 0.9375rem;">
-		<div class="row col-6">
+  <h1>Plan Management</h1>
+  <div class="container-fluid text-center " style="padding: 0.9375rem;">
+    <div class="row col-6">
 
-<!--			<button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Add Plan</button>-->
-      <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add Plan</button>
-		</div>
-	</div>
-	<table class="table table-striped table-hover caption-top align-middle text-center">
-		<caption>List of lan</caption>
-		<thead class="table-light text-capitalize">
-			<tr>
-				<th scope="col" v-for="(item,index) in dataTitle">{{item}}</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr v-for="(item, index) in data">
-<!--				<th>{{ index }}</th>-->
-        <td>{{item.planId}}</td>
-        <td>{{item.price}}</td>
-        <td>{{ getTypeById(item.typeId)}}</td>
-        <td>{{ item.category === 0? "walk-in": "reservation"}}</td>
-        <td>{{ item.description }}</td>
-        <td>{{ getUnitName(item.unit) }}</td>
-<!--				<td v-for="(item, index) in item">{{ item }}</td>-->
-				<td><button type="button" class="btn btn-primary"
-                    @click="selectedPlanId=item.planId" data-bs-toggle="modal" data-bs-target="#buyModal">Buy</button></td>
-<!--				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>-->
-			</tr>
-		</tbody>
-	</table>
+      <!--			<button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Add Plan</button>-->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Add Plan</button>
+    </div>
+  </div>
+  <table class="table table-striped table-hover caption-top align-middle text-center">
+    <caption>List of Plan</caption>
+    <thead class="table-light text-capitalize">
+    <tr>
+      <th scope="col" v-for="(item,index) in dataTitle">{{ item }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(item, index) in data">
+      <!--				<th>{{ index }}</th>-->
+      <td>{{ item.planId }}</td>
+      <td>{{ item.price }}</td>
+      <td>{{ getTypeById(item.typeId) }}</td>
+      <td>{{ item.category === 0 ? "walk-in" : "reservation" }}</td>
+      <td>{{ item.description }}</td>
+      <td>{{ getUnitName(item.unit) }}</td>
+      <!--				<td v-for="(item, index) in item">{{ item }}</td>-->
+      <td>
+        <button type="button" class="btn btn-primary"
+                @click="selectedPlanId=item.planId" data-bs-toggle="modal" data-bs-target="#buyModal">Buy
+        </button>
+      </td>
+      <!--				<td><button type="button" class="btn btn-primary" v-on:click="modifyUser(index)">modify</button></td>-->
+    </tr>
+    </tbody>
+  </table>
   <!-- 模态框 -->
   <div class="modal" id="buyModal">
     <div class="modal-dialog">
@@ -37,7 +40,7 @@
 
         <!-- 模态框头部 -->
         <div class="modal-header">
-          <h4 class="modal-title">Add Office</h4>
+          <h4 class="modal-title">Buy Plan</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
@@ -45,9 +48,12 @@
         <div class="modal-body">
           <form>
             <div class="row col-10">
-              <div class="col-2 align-self-center">Type</div>
+              <div class="col-2 align-self-center">User</div>
               <select class="form-select col" v-model="buyPlanTable.userId" aria-label="Default select example">
-                <option v-for="item in userList" :value="item.userId">{{ item.userName + '('+item.userId+")" }}</option>
+                <option v-for="item in userList" :value="item.userId">{{
+                    item.userName + '(' + item.userId + ")"
+                  }}
+                </option>
               </select>
               <!-- <button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Select</button> -->
             </div>
@@ -64,15 +70,14 @@
 
             <button
                 class="w-100 btn btn-lg btn-primary"
-            type="submit"
-            @click="onSubmitBuyPlan"
+                type="submit"
+                @click="onSubmitBuyPlan"
             >
               Submit
             </button>
             <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p> -->
           </form>
         </div>
-
 
 
       </div>
@@ -100,7 +105,6 @@
               </select>
               <!-- <button type="button" class="btn btn-primary col" style="margin-left: 0.625rem;">Select</button> -->
             </div>
-
 
 
             <!-- unit -->
@@ -222,7 +226,6 @@
         </div>
 
 
-
       </div>
     </div>
   </div>
@@ -232,42 +235,42 @@
 import {addPlan, buy_plan, get_all_user, getFacilityType, getOffice, getPlan} from "../../utils/api";
 
 export default {
-	data() {
-		return {
+  data() {
+    return {
       officeList: [],
       selectedPlanId: '',
       facilityTypeList: [],
       buyPlanTable: {},
       addPlanTable: {},
       userList: [],
-			dataTitle:['planId','Price','typeId', 'Category','description', 'unit', "Buy"],
-			data: {
-				'1': {
-					planPrice: '1$/day',
-					planInfo: 'One day use right',
-				},
-				'2': {
-					planPrice: '10$/week',
-					planInfo: 'One week use right',
-				},
-				'3': {
-					planPrice: '10$/mo',
-					planInfo: 'One month use right',
-				},
-			}
-		};
-	},
-	methods: {
+      dataTitle: ['planId', 'Price', 'typeId', 'Category', 'description', 'unit', "Buy"],
+      data: {
+        '1': {
+          planPrice: '1$/day',
+          planInfo: 'One day use right',
+        },
+        '2': {
+          planPrice: '10$/week',
+          planInfo: 'One week use right',
+        },
+        '3': {
+          planPrice: '10$/mo',
+          planInfo: 'One month use right',
+        },
+      }
+    };
+  },
+  methods: {
     getUnitName(i) {
       if (i === 0) {
         return "hour";
       } else if (i === 1) {
         return "day";
-      }  else if (i === 2) {
+      } else if (i === 2) {
         return "week";
       } else if (i === 3) {
         return "month";
-      }else {
+      } else {
         return i;
       }
 
@@ -294,14 +297,17 @@ export default {
       const res = await buy_plan(data);
       if (res.status === 200) {
         console.log("buy success");
+        alert("buy success");
+        location.reload()
+
       }
     },
-		deleteUser(userid) {
-			alert(userid);
-		},
-		modifyUser(userid) {
-			alert(userid);
-		},
+    deleteUser(userid) {
+      alert(userid);
+    },
+    modifyUser(userid) {
+      alert(userid);
+    },
     async initData() {
       const userData = await get_all_user();
       if (userData.status === 200) {
@@ -326,7 +332,7 @@ export default {
       }
 
     }
-	},
+  },
   created() {
     this.initData();
   },

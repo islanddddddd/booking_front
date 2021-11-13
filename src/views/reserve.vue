@@ -208,7 +208,7 @@ export default {
 
       this.selectedFacilityIndex = index;
       this.msg['facility'] = this.facilityData[this.selectedFacilityIndex]
-      this.$refs.rcalendar.changeUnit(0,new Date())
+      this.$refs.rcalendar.changeUnit(0, new Date())
     },
     async getSpecialHours_hours(facility_id) {
       console.log(facility_id)
@@ -262,22 +262,32 @@ export default {
       };
     },
     async confirmBtn() {
-      if (this.aUserId == '' || this.operater_id == '') {
-        alert('不能为空')
-      } else {
-        const fa = this.facilityData[this.selectedFacilityIndex];
-        let data;
-        if (this.isAdmin) {
-          data = this.getDataAddByAdmin(fa);
-        } else {
-          data = this.getDataAddByUser(fa);
+      if (this.isAdmin) {
+        if (this.aUserId == '' || this.operater_id == '') {
+          alert('不能为空')
+          return
         }
-        const res = await addReserve(data);
-        if (res.data.status == 'failed, no access') alert('add faill')
-        else alert('add success')
-        // location.reload()
-        //  这里可以跳出一个窗口用以显示已预约的订单信息
+      } else {
+        this.operater_id = this.aUserId
+        if (this.aUserId == '' || this.operater_id == '') {
+          alert('不能为空')
+          return
+
+        }
       }
+      const fa = this.facilityData[this.selectedFacilityIndex];
+      let data;
+      if (this.isAdmin) {
+        data = this.getDataAddByAdmin(fa);
+      } else {
+        data = this.getDataAddByUser(fa);
+      }
+      const res = await addReserve(data);
+      if (res.data.status == 'failed, no access') alert('add faill')
+      else alert('add success')
+      // location.reload()
+      //  这里可以跳出一个窗口用以显示已预约的订单信息
+
 
     },
     fatherClick() {

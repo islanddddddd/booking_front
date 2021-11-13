@@ -7,10 +7,10 @@
   </dl>
 
   <!--  <button class="btn btn-primary m-1" @click="changeUnit(0)">hour</button>-->
-  <!--  <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>-->
-  <!--  <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>-->
-  <button @click="createEvent('2021-11-13 14:00','2021-11-13 18:00',)">create events</button>
-  <button @click="returnHours">return</button>
+    <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>
+    <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>
+  <!--  <button @click="createEvent('2021-11-13 14:00','2021-11-13 18:00',)">create events</button>-->
+  <!--  <button @click="returnHours">return</button>-->
   <vue-cal
       v-if="unit == 0"
       style="height: 25rem"
@@ -29,7 +29,7 @@
   />
   <div v-else-if="unit == 1"
   >
-    日
+
     <vue-cal
         style="height: 25rem"
         :time-from="msg.startTime * 60"
@@ -40,12 +40,15 @@
         :dblclickToNavigate="false"
         :disable-days="disable_days"
         @cell-click="getDay('cell-click ', $event)"
-        @view-change="viewChange('view-change', $event)"
-
-    />
+        @view-change="viewChange('view-change', $event)">
+      <!-- Custom cells -->
+      <template v-slot:cell-content="{ cell, view, events, goNarrower }">
+        <span class="vuecal__no-event" v-if="['week', 'day'].includes(view.id) && !events.length">Nothing here 👌</span>
+      </template>
+    </vue-cal>
   </div>
   <div v-else-if="unit == 3">
-    月
+
     <vue-cal
         style="height: 25rem"
         :time-from="msg.startTime * 60"
