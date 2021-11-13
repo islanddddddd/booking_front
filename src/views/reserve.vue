@@ -203,7 +203,7 @@ export default {
     select(index) {
       this.selectedFacilityIndex = index;
       this.msg['facility'] = this.facilityData[this.selectedFacilityIndex]
-      this.$refs.rcalendar.changeUnit(0)
+      this.$refs.rcalendar.changeUnit(0, new Date())
     },
     async getSpecialHours_hours(facility_id) {
       console.log(facility_id)

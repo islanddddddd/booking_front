@@ -6,58 +6,61 @@
     </div>
   </dl>
 
-  <button class="btn btn-primary m-1" @click="changeUnit(0)">hour</button>
-  <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>
-  <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>
+  <!--  <button class="btn btn-primary m-1" @click="changeUnit(0)">hour</button>-->
+  <!--  <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>-->
+  <!--  <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>-->
   <vue-cal
       v-if="unit == 0"
       style="height: 25rem"
       :time-from="msg.startTime * 60"
       :time-to="msg.endTime * 60"
       active-view="day"
-      hide-view-selector
+      :disable-views="['years','week']"
+
       :special-hours="specialHours"
       :dblclickToNavigate="false"
       today-button
       :events="[]"
       @cell-click="getHours('cell-click ', $event)"
+      @view-change="viewChange('view-change', $event)"
   />
-  <vue-cal
-      v-else-if="unit == 1"
-      style="height: 25rem"
-      :time-from="msg.startTime * 60"
-      :time-to="msg.endTime * 60"
-      active-view="month"
-      hide-view-selector
-      :dblclickToNavigate="false"
-      :disable-days="disable_days"
-      @cell-click="getDay('cell-click ', $event)"
-  />
-  <vue-cal
-      v-else-if="unit == 2"
-      style="height: 25rem"
-      :time-from="msg.startTime * 60"
-      :time-to="msg.endTime * 60"
-      active-view="month"
-      hide-view-selector
-      :special-hours="specialHours"
-      :dblclickToNavigate="false"
-      :disable-days="disable_days"
-      today-button
-      @cell-click="getWeek('cell-click ', $event)"
-  />
+  <div v-else-if="unit == 1"
+  >
+    日
+    <vue-cal
+        style="height: 25rem"
+        :time-from="msg.startTime * 60"
+        :time-to="msg.endTime * 60"
+        active-view="month"
+        :disable-views="['years','week']"
+
+        :dblclickToNavigate="false"
+        :disable-days="disable_days"
+        @cell-click="getDay('cell-click ', $event)"
+        @view-change="viewChange('view-change', $event)"
+
+    />
+  </div>
+
+  <!--  <vue-cal-->
+  <!--      v-else-if="unit == 2"-->
+  <!--      style="height: 25rem"-->
+  <!--      :time-from="msg.startTime * 60"-->
+  <!--      :time-to="msg.endTime * 60"-->
+  <!--      active-view="month"-->
+  <!--      :disable-views="['years']"-->
+  <!--      :special-hours="specialHours"-->
+  <!--      :dblclickToNavigate="false"-->
+  <!--      :disable-days="disable_days"-->
+  <!--      today-button-->
+  <!--      @cell-click="getWeek('cell-click ', $event)"-->
+  <!--  />-->
 </template>
 
 <script>
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import {get_hour_ava, get_day_ava} from "../utils/api";
-
-// `from` and `to` are expected in minutes.
-// const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' };
-
-// In your component's data, special hours from Monday to Friday.
-// Note that you can provide an array of multiple blocks for the same day.
 
 export default {
   components: {VueCal},
@@ -77,34 +80,32 @@ export default {
     hours_ava: undefined,
     unit: 0,
   }),
-  // mounted() {
-  //   this.changeUnit(0)
-  // },
   methods: {
-    async changeUnit(unit, facility_id) {
-      console.log("changeUnit");
+    viewChange(s, e) {
+      // alert('view change')
+      console.log(e)
+      console.log(e.view)
+      console.log(e.startDate)
+      if (e.view == 'day') this.changeUnit(0, e.startDate)
+      else if (e.view == 'month') this.changeUnit(1, e.startDate)
+    },
+    async changeUnit(unit, starTime) {
       this.unit = unit;
-      if (unit == 1 || unit == 2)
+      if (unit == 1 || unit == 2) {
+        let year = new Date(starTime).getFullYear()
+        let month = new Date(starTime).getMonth() + 1
         await this.getSpecialHours_days(
-            this.msg.facility.facility_id
+            this.msg.facility.facility_id, year, month
         );
-      else if (unit == 0) {
-        console.log("getSpecialHours_hours");
-        let date = new Date().getDate();
-        let day = new Date().getDay();
-        alert(date)
+      } else if (unit == 0) {
+        let date = new Date(starTime).getDate()
+        let day = new Date(starTime).getDay()
+        if (day == 0) day = 7
         await this.getSpecialHours_hours(
             date,
             day,
             this.msg.facility.facility_id
         );
-        // for (let i = day, add = 0; i < 8; i++, add++) {
-        //   await this.getSpecialHours_hours(
-        //       date + add,
-        //       i.toString(),
-        //       this.msg.facility.facility_id
-        //   );
-        // }
       }
     },
     async getSpecialHours_hours(date, day, facility_id) {
@@ -123,7 +124,6 @@ export default {
       for (let i = 0; i < hours_ava.length; i++) {
         start = hours_ava[i];
         end = hours_ava[i];
-        // console.log('i:' + i)
         for (let j = i + 1; j < hours_ava.length + 1; j++) {
           // console.log(j)
           if (end + 1 == hours_ava[j]) {
@@ -143,12 +143,14 @@ export default {
       }
       specialHours[day] = hour_ava_arr;
 
-      // console.log(specialHours)
-      // this.specialHours = specialHours
       this.specialHours[day] = hour_ava_arr;
+      console.log('this.specialHours')
+      console.log(this.specialHours)
     },
-    async getSpecialHours_days(facility_id) {
-      let data = {facility_id};
+    async getSpecialHours_days(facility_id, year, month) {
+      // alert("year:" + year.toString() + "month:" + month.toString())
+      // let data = {facility_id};
+      let data = {facility_id, 'year': year, 'month': month};
       const res = await get_day_ava(data);
       let days = res.data.days;
       let month_days = [];
@@ -161,8 +163,19 @@ export default {
       });
 
       let disable_days = [];
-      let now_year = new Date().getFullYear();
-      let now_month = new Date().getMonth();
+      let now_year = year;
+      let now_month = month - 1;
+      let today = new Date().getDate()
+
+      for (let i = 1; i < today + 1; i++) {
+        let disable_day = new Date(
+            now_year,
+            now_month,
+            i
+        ).format();
+        disable_days.push(disable_day);
+      }
+
       for (let i = 0; i < days.length; i++) {
         let disable_day = new Date(
             now_year,
