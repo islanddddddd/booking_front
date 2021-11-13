@@ -9,6 +9,8 @@
   <!--  <button class="btn btn-primary m-1" @click="changeUnit(0)">hour</button>-->
   <!--  <button class="btn btn-primary m-1" @click="changeUnit(1)">day</button>-->
   <!--  <button class="btn btn-primary m-1" @click="changeUnit(2)">week</button>-->
+  <button @click="createEvent('2021-11-13 14:00','2021-11-13 18:00',)">create events</button>
+  <button @click="returnHours">return</button>
   <vue-cal
       v-if="unit == 0"
       style="height: 25rem"
@@ -21,8 +23,9 @@
       :dblclickToNavigate="false"
       today-button
       :events="events"
-      @cell-click="getHours('cell-click ', $event)"
+      @cell-click="create_hours_events('cell-click ', $event)"
       @view-change="viewChange('view-change', $event)"
+      :on-event-click="onEventClick"
   />
   <div v-else-if="unit == 1"
   >
@@ -70,11 +73,11 @@ export default {
   data: () => ({
     events: [
       {
-        start: '2021-11-13 10:30',
-        end: '2021-11-13 11:30',
-        title: 'Doctor appointment',
-        content: '<i class="v-icon material-icons">local_hospital</i>',
-        class: 'btn-primary'
+        start: '2021-11-13 1:00',
+        end: '2021-11-13 3:30',
+        title: 'Boring event',
+        content: '<i class="icon material-icons">block</i><br>I am not draggable, not resizable and not deletable.',
+        class: 'bg-info',
       },
     ],
     times: {},
@@ -161,7 +164,7 @@ export default {
       let today_date = today.getDate()
       if (today.getFullYear() > year || today.getMonth() > month || today.getDate() > date) {
         // alert('过了')
-        console.log('过了')
+        console.log('时间过了')
         hour_ava_arr = [];
         hours_ava = []
         // this.specialHours[day] = hour_ava_arr;
@@ -229,12 +232,38 @@ export default {
       console.log(disable_days);
     },
 
+    //点击事件后取消这一段
     onEventClick(event, e) {
       this.selectedEvent = event;
       this.showDialog = true;
+      // alert(new Date(event.start).format('YYYY-MM-DD H:00'))
+      // alert(this.events)
 
-      // Prevent navigating to narrower view (default vue-cal behavior).
-      e.stopPropagation();
+
+      // for (let i = 0; i < this.events.length; i++) {
+      for (const i in this.events) {
+        // alert(i)
+        // alert('开始')
+        if (new Date(event.start).format('YYYY-MM-DD H:00') == this.events[i].start) {
+          // alert('已存在')
+          delete this.events[i]
+          break
+        } else {
+          // alert('不存在')
+          // alert(new Date(event.start).format('YYYY-MM-DD H:00'))
+          // alert(this.events[i].start)
+        }
+      }
+
+
+    },
+    //创建事件
+    createEvent(start, end) {
+      let event = {
+        start: start, end: end, title: '', icon: '', content: '', contentFull: '',
+        class: 'bg-primary'
+      }
+      this.events.push(event)
     },
     backTimes(e) {
       this.times.unit = this.unit;
@@ -243,15 +272,66 @@ export default {
       this.times.days = new Date(e).getDate();
       this.times.hours = new Date(e).getHours() - 1;
     },
-    getHours(s, e) {
-      console.log("e:");
-      console.log(e);
-      console.log(this.hours_ava)
-      console.log(e.getHours())
+    create_hours_events(s, e) {
       if (this.hours_ava.indexOf(e.getHours()) == -1) {
         console.log("选择的不是可用时间");
-
       } else {
+        let e_date = new Date(e)
+        let event_start = e_date.format("YYYY-MM-DD H:00");
+        // alert(event_start)
+        let event_end = new Date(e_date.setHours(e_date.getHours() + 1)).format("YYYY-MM-DD H:00");
+        // alert(event_end)
+        this.createEvent(event_start, event_end)
+      }
+    },
+    return() {
+      // alert(this.unit)
+      if (this.unit == 0) {
+        // alert(this.unit)
+        this.returnHours()
+
+      }
+      this.$emit("childFn", this.times);
+
+      this.$emit("father-click");
+
+    },
+    returnHours() {
+      // alert('return hours')
+      this.backTimes(this.events[0])
+      let startTime = '', endTime, hours = [], date = '', month = '', year = ''
+      for (const i in this.events) {
+        let item = this.events[i]
+        hours.push(new Date(item.start).getHours())
+        if (startTime == '')
+          startTime = item.start
+        if (date == '')
+          date = new Date(item.start).getDate()
+        if (month == '')
+          month = new Date(item.start).getMonth()
+        if (year == '')
+          year = new Date(item.start).getFullYear()
+
+
+        endTime = item.end
+      }
+      this.times.startTime = startTime
+      this.times.endTime = endTime
+      this.times.days = JSON.stringify([date]);
+      this.times.hours = JSON.stringify(hours);
+      this.times.month = month + 1;
+      this.times.year = year;
+
+      let times = this.times
+      console.log(times)
+      // this.$emit("childFn", this.times);
+      // this.$emit("father-click");
+    },
+    getHours(s, e) {
+      if (this.hours_ava.indexOf(e.getHours()) == -1) {
+        console.log("选择的不是可用时间");
+      } else {
+
         // 这是弃用的,但还有点用
         this.times.date = new Date(e).format("YYYY-MM-DD");
         this.times.startTime = new Date(e).format("HH:00");
@@ -261,16 +341,6 @@ export default {
         this.backTimes(e);
         this.times.days = JSON.stringify([(this.times.days)]);
         this.times.hours = JSON.stringify([(this.times.hours)]);
-
-        // let days = [];
-        // let hours = [];
-        // this.times.days = JSON.stringify(
-        //     days.push(this.times.days)
-        // );
-        // this.times.hours = JSON.stringify(
-        //     hours.push(this.times.hours)
-        // );
-        // this.times.hours = JSON.stringify(this.times.hours);
 
         this.$emit("childFn", this.times);
         this.$emit("father-click");

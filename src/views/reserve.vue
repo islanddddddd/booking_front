@@ -14,13 +14,17 @@
         <!-- 模态框内容 -->
         <div class="modal-body">
           <div>
-            <rcalendar :msg="msg" @father-click="fatherClick" @childFn="getTime" ref="rcalendar"></rcalendar>
+            <rcalendar :msg="msg" @father-click="fatherClick" @childFn="getTime"
+                       ref="rcalendar"></rcalendar>
           </div>
         </div>
 
         <!-- 模态框底部 -->
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" @click="this.$refs.rcalendar.return()">Confirm
+          </button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">close</button>
+
         </div>
         <button style="display:none" id="jumptosecond" class="btn btn-primary" data-bs-target="#times"
                 data-bs-toggle="modal">Open second modal
