@@ -1,8 +1,9 @@
 <template>
   <h4>Home</h4>
-  <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"
-           @click="this.modifyTable = this.user">
-  modify</button>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal"
+          @click="this.modifyTable = this.user">
+    modify
+  </button>
 
   <div class="p-4 mb-4 rounded bg-light">
     <!--    <div id="profileCard" class="">-->
@@ -11,59 +12,43 @@
 
     <!--      </div>-->
     <!--    </div>-->
+    <h4 class="text-capitaliz " v-if="user.admin ==true">Admin</h4>
 
     <dl class="row text-capitalize">
       <div class="row col-6" v-for="(item, index) in user">
         <dt class="col-sm-3">{{ index }}</dt>
         <dd class="col-sm-3">{{ item }}</dd>
       </div>
+
     </dl>
 
   </div>
   <!--  -->
-<!--  <div class="row mb-2" id="user" v-if="user.admin ==false">-->
-  <div class="row mb-2" id="user" v-if="!user.admin">
-    <div class="col-md-6">
-      <div
-          class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative profileCard">
-        <div class="col p-4 d-flex flex-column position-static" @click="goPlan()">
-          <strong class="d-inline-block mb-2 text-primary">Plan</strong>
-          <h3 class="mb-0">{{ plan.type }}</h3>
-          <div class="mb-1 text-muted">{{ plan.time }}</div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 ">
-      <div
-          class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative profileCard">
-        <div class="col p-4 d-flex flex-column position-static" @click="goOrder()">
-          <strong class="d-inline-block mb-2 text-success">Order</strong>
-          <h3 class="mb-0">{{ order }}</h3>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!--  <div class="row mb-2" id="user" v-if="user.admin ==false">-->
+  <!--  <div class="row mb-2" id="user" v-if="!user.admin">-->
+  <!--    <div class="col-md-6">-->
+  <!--      <div-->
+  <!--          class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative profileCard">-->
+  <!--        <div class="col p-4 d-flex flex-column position-static">-->
+  <!--          <strong class="d-inline-block mb-2 text-primary">Plan</strong>-->
+  <!--          <h3 class="mb-0">{{ plan.type }}</h3>-->
+  <!--          <div class="mb-1 text-muted">{{ plan.time }}</div>-->
+  <!--        </div>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
 
-  <div class="row mb-2" id="admin" v-else>
-    <div class="col-md-6">
-      <div
-          class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative profileCard">
-        <div class="col p-4 d-flex flex-column position-static" @click="goPlan()">
-          <strong class="d-inline-block mb-2 text-primary">Plan</strong>
-          <h3 class="mb-0">Admin</h3>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6 ">
-      <div
-          class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative profileCard">
-        <div class="col p-4 d-flex flex-column position-static" @click="goOrder()">
-          <strong class="d-inline-block mb-2 text-success">Order</strong>
-          <h3 class="mb-0">{{ order }}</h3>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!--  <div class="row mb-2" id="admin" v-if="user.admin ==true">-->
+  <!--    <div class="col-md-6">-->
+  <!--      <div-->
+  <!--          class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative profileCard">-->
+  <!--        <div class="col p-4 d-flex flex-column position-static">-->
+  <!--          <strong class="d-inline-block mb-2 text-primary">Plan</strong>-->
+  <!--          <h3 class="mb-0">Admin</h3>-->
+  <!--        </div>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
 
 
   <!-- 模态框 -->
@@ -178,7 +163,6 @@
         </div>
 
 
-
       </div>
     </div>
   </div>
@@ -191,7 +175,7 @@ import {updateUser} from "../utils/api";
 export default {
   data() {
     return {
-      modifyTable:{},
+      modifyTable: {},
       plan: {
         type: '月卡',
         time: '2021-12-12'
@@ -202,10 +186,11 @@ export default {
   },
   methods: {
     goPlan() {
-      alert('plan');
+      // alert('plan');
     },
     goOrder() {
-      alert('order');
+      // alert('order');
+
     },
     async onSubmit() {
       console.log(this.modifyTable.gender);

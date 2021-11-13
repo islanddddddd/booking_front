@@ -5,7 +5,7 @@ import {
 import Login from "./views/logIN/login.vue"
 import Register from "./views/logIN/register.vue"
 import Home from "./views/home.vue"
-import profile from './views/Profile.vue'
+import profile from './views/profile.vue'
 import ShowPlan from './views/plan/showPlan.vue'
 import BuyPlan from './views/plan/buyPlan.vue'
 import UserManagement from './views/admin/userManagement.vue'
